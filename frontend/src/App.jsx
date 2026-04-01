@@ -1,6 +1,11 @@
+import ResumeUpload from "./components/ResumeUpload";
+
 function App() {
   return (
-    <h1>AI Developer Copilot 🚀</h1>
+    <div>
+      <h1>Code Sage AI</h1>
+      <ResumeUpload />
+    </div>
   );
 }
 
