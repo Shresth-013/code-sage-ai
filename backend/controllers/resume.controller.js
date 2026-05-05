@@ -1,4 +1,7 @@
-import pdfParse from "pdf-parse";
+// ✅ This avoids the bug
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const pdfParse = require("pdf-parse");
 import { analyzeResumeWithGemini } from "../services/geminiServices.js";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
