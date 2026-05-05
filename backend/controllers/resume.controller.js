@@ -1,11 +1,10 @@
-const pdfParse = require("pdf-parse");
-const { analyzeResumeWithGemini } = require("../services/geminiService");
+import pdfParse from "pdf-parse";
+import { analyzeResumeWithGemini } from "../services/geminiService.js";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-const analyzeResume = async (req, res) => {
+export const analyzeResume = async (req, res) => {
   try {
-    // 1. Check file exists
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -13,7 +12,6 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // 2. Check file type
     if (req.file.mimetype !== "application/pdf") {
       return res.status(400).json({
         success: false,
@@ -21,7 +19,6 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // 3. Check file size
     if (req.file.size > MAX_FILE_SIZE) {
       return res.status(400).json({
         success: false,
@@ -29,7 +26,7 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // 4. Extract text from PDF
+    // Extract text from PDF
     let extractedText;
     try {
       const pdfData = await pdfParse(req.file.buffer);
@@ -41,15 +38,14 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // 5. Check if PDF has actual text
     if (!extractedText || extractedText.length < 50) {
       return res.status(422).json({
         success: false,
-        error: "Resume appears empty or is a scanned image. Upload a text-based PDF.",
+        error: "Resume appears empty or is scanned. Upload a text-based PDF.",
       });
     }
 
-    // 6. Send to Gemini
+    // Send to Gemini
     let analysisResult;
     try {
       analysisResult = await analyzeResumeWithGemini(extractedText);
@@ -61,7 +57,6 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // 7. Validate Gemini response shape
     const { score, summary, strengths, weaknesses, missingKeywords, suggestions } = analysisResult;
 
     if (
@@ -78,7 +73,6 @@ const analyzeResume = async (req, res) => {
       });
     }
 
-    // 8. Send success response
     return res.status(200).json({
       success: true,
       data: { score, summary, strengths, weaknesses, missingKeywords, suggestions },
@@ -92,5 +86,3 @@ const analyzeResume = async (req, res) => {
     });
   }
 };
-
-module.exports = { analyzeResume };
