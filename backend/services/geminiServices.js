@@ -33,7 +33,7 @@ Resume Text:
 ${resumeText}
 ---
 `;
-
+// Generate response from Gemini
   const result = await model.generateContent(prompt);
   const response = await result.response;
   const text = response.text();
