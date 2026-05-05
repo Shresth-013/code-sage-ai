@@ -1,5 +1,5 @@
 import pdfParse from "pdf-parse";
-import { analyzeResumeWithGemini } from "../services/geminiService.js";
+import { analyzeResumeWithGemini } from "../services/geminiServices.js";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
