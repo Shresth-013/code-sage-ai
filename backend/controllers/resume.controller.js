@@ -1,8 +1,10 @@
-// ✅ This avoids the bug
+// ✅ imports FIRST
 import { createRequire } from "module";
+import { analyzeResumeWithGemini } from "../services/geminiServices.js";
+
+// ✅ require AFTER imports
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
-import { analyzeResumeWithGemini } from "../services/geminiServices.js";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
@@ -35,6 +37,7 @@ export const analyzeResume = async (req, res) => {
       const pdfData = await pdfParse(req.file.buffer);
       extractedText = pdfData.text?.trim();
     } catch (err) {
+      console.error("PDF Parse Error:", err.message);
       return res.status(422).json({
         success: false,
         error: "Could not read PDF. Please upload a valid non-scanned PDF.",
@@ -53,7 +56,8 @@ export const analyzeResume = async (req, res) => {
     try {
       analysisResult = await analyzeResumeWithGemini(extractedText);
     } catch (err) {
-      console.error("Gemini API Error:", err.message);
+      // ✅ This now prints the FULL error so we can see exactly what's wrong
+      console.error("Gemini API Error FULL:", err);
       return res.status(502).json({
         success: false,
         error: "AI analysis failed. Please try again.",
