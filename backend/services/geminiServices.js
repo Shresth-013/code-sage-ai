@@ -1,8 +1,8 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-const analyzeResumeWithGemini = async (resumeText) => {
+export const analyzeResumeWithGemini = async (resumeText) => {
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
   const prompt = `
@@ -29,23 +29,19 @@ Scoring guide:
 Be specific and actionable. Only analyze what is actually in the resume.
 
 Resume Text:
+
 ---
 ${resumeText}
 ---
 `;
-// Generate response from Gemini
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
 
-  // Strip markdown code blocks if Gemini wraps response in them
+  const result = await model.generateContent(prompt);
+  const text = result.response.text();
+
   const cleaned = text
     .replace(/```json\n?/g, "")
     .replace(/```\n?/g, "")
     .trim();
 
-  const parsed = JSON.parse(cleaned);
-  return parsed;
+  return JSON.parse(cleaned);
 };
-
-module.exports = { analyzeResumeWithGemini };
