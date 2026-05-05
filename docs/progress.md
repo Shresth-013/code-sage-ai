@@ -1,39 +1,63 @@
-# 🚀 Code Sage AI – Progress Tracker
+# 📊 Code Sage AI — Progress Tracker
 
-## Day 1 - Project Setup
+## Day 1 — Project Setup ✅
 
-### ✅ Completed:
-- Created project structure
-- Setup frontend (React + Vite)
-- Setup backend (Express server)
-- Created health API
+### Completed:
+- Created monorepo project structure
+- Setup React + Vite frontend
+- Setup Node.js + Express backend
+- Configured TailwindCSS
+- Created health check API
+- Initialized Git repository
 
-### ❌ Pending:
-- Resume Analyzer backend
-- AI integration
+### Notes:
+- Both frontend and backend running locally
+- MVC folder structure established
 
-### 🧠 Notes:
-- Everything running locally
+---
 
+## Day 2 — Resume Analyzer Core ✅
 
-## Day 2 – Resume Analyzer (Core Feature)
-
-### ✅ Completed:
-- Implemented PDF upload using multer
-- Extracted text from resume (pdf-parse)
-- Built resume analysis API
+### Completed:
+- Implemented PDF upload using Multer
+- Extracted text from resume using pdf-parse
+- Built resume analysis API (mock response)
 - Connected frontend with backend
-- Displayed analysis result in UI (no popup)
-- Added structured result display (ATS score, strengths, keywords, suggestions)
-- Fixed API & frontend bugs
+- Displayed analysis results in UI (no popups)
+- Structured result display (ATS score, strengths, keywords, suggestions)
+- Fixed API and frontend bugs
 
-### ❌ Pending:
-- Integrate real AI (OpenAI GPT)
-- Improve UI/UX (modern design, better layout)
-- Add proper error handling (invalid files, edge cases)
-- Deployment (frontend + backend)
-
-### 🧠 Notes:
+### Notes:
 - End-to-end flow working: Upload → Analyze → Display
-- Project now functions like a basic SaaS MVP
-- Ready for AI integration (next phase)
+- Project functioning as basic SaaS MVP
+- Ready for AI integration
+
+---
+
+## Day 3 — Gemini AI Integration + UI Upgrade ✅
+
+### Completed:
+- Integrated Gemini 2.5 Flash API for real resume analysis
+- Designed structured AI prompt for ATS scoring
+- Improved backend response structure (score, summary, strengths, weaknesses, missingKeywords, suggestions)
+- Added file validation (PDF only, 5MB limit)
+- Improved error handling (API failures, invalid PDFs, empty content)
+- Fixed pdf-parse ES Module compatibility bug
+- Fixed dotenv loading issue
+- Upgraded frontend UI (score ring, drag & drop, loading spinner, sections)
+- Enabled Gemini API on Google Cloud Console
+
+### Notes:
+- Real AI analysis working end-to-end
+- Gemini 2.5 Flash selected as optimal free tier model
+- Production-level error handling implemented
+
+---
+
+## Upcoming Features
+
+- AI Code Reviewer (analyze and suggest improvements for code)
+- LeetCode Hint Generator (context-aware problem hints)
+- Learning Roadmap Generator (personalized skill paths)
+- Navigation improvements + UI polish
+- Deployment (Render for backend, Vercel for frontend)
