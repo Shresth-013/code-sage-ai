@@ -2,7 +2,7 @@ import ResumeUpload from "./components/ResumeUpload";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div style={{ minHeight: "100svh", background: "var(--bg)" }}>
       <ResumeUpload />
     </div>
   );
