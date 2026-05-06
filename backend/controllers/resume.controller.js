@@ -1,8 +1,6 @@
-// ✅ imports FIRST
 import { createRequire } from "module";
 import { analyzeResumeWithGemini } from "../services/geminiServices.js";
 
-// ✅ require AFTER imports
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
 
@@ -56,8 +54,31 @@ export const analyzeResume = async (req, res) => {
     try {
       analysisResult = await analyzeResumeWithGemini(extractedText);
     } catch (err) {
-      // ✅ This now prints the FULL error so we can see exactly what's wrong
-      console.error("Gemini API Error FULL:", err);
+      console.error("Gemini API Error:", err.message);
+
+      // Forward the clean messages thrown by geminiServices.js
+      if (err.message.includes("temporarily busy")) {
+        return res.status(503).json({
+          success: false,
+          error: err.message, // "AI service is temporarily busy. Please try again in a moment."
+        });
+      }
+
+      if (err.message.includes("Rate limit")) {
+        return res.status(429).json({
+          success: false,
+          error: err.message, // "Rate limit reached. Please wait a moment and try again."
+        });
+      }
+
+      if (err.message.includes("parse") || err.message.includes("Failed to parse")) {
+        return res.status(422).json({
+          success: false,
+          error: err.message, // "Failed to parse AI response. Please try again."
+        });
+      }
+
+      // Fallback for anything unexpected
       return res.status(502).json({
         success: false,
         error: "AI analysis failed. Please try again.",
