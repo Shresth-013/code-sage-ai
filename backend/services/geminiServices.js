@@ -81,3 +81,63 @@ ${resumeText}
 
   throw lastError;
 };
+export const CODE_SYSTEM = `You are a senior software engineer specializing in code quality.
+Review the provided code and respond ONLY with valid JSON.
+No explanation, no markdown, no preamble outside the JSON.`;
+
+export const reviewCodeWithGemini = async (code, language, maxRetries = 3) => {
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+  const prompt = `
+You are a senior software engineer doing a code review.
+Return ONLY raw JSON. No explanation, no markdown, no code blocks.
+
+LANGUAGE: ${language}
+
+CODE:
+${code}
+
+{
+  "overallScore": <number 0-100>,
+  "summary": "<2-3 sentence overall assessment>",
+  "bugs": [{ "issue": "<description>", "line": "<line number or range>", "fix": "<how to fix>" }],
+  "performance": ["<suggestion>"],
+  "readability": ["<suggestion>"],
+  "bestPractices": ["<suggestion>"]
+}`;
+
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+
+      const cleaned = text
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+
+      return JSON.parse(cleaned);
+
+    } catch (error) {
+      lastError = error;
+      const isRetryable = error.status === 503 || error.status === 429;
+
+      if (isRetryable && attempt < maxRetries) {
+        const delay = 1000 * Math.pow(2, attempt);
+        console.warn(`Gemini ${error.status} on attempt ${attempt}/${maxRetries}. Retrying in ${delay}ms...`);
+        await sleep(delay);
+        continue;
+      }
+
+      if (error.status === 503) throw new Error("AI service is temporarily busy. Please try again.");
+      if (error.status === 429) throw new Error("Rate limit reached. Please wait and try again.");
+      if (error instanceof SyntaxError) throw new Error("Failed to parse AI response. Please try again.");
+
+      throw error;
+    }
+  }
+
+  throw lastError;
+};
