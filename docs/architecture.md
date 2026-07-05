@@ -27,16 +27,19 @@ Four tools: Resume Analyzer · Code Reviewer · LeetCode Hints · Roadmap Genera
 
 ## Project Structure
 code-sage-ai/
-├── backend/
+├── ├── backend/
+│   ├── config/
+│   │   └── db.js                  # MongoDB connection
+│   ├── models/
+│   │   └── conversation.model.js  # Hint session schema
 │   ├── controllers/
-│   │   ├── resume.controller.js   # PDF upload → Gemini → response
-│   │   └── code.controller.js     # Code input → Gemini → response
+│   │   ├── resume.controller.js
+│   │   ├── code.controller.js
+│   │   └── hints.controller.js    # Multi-turn hint sessions
 │   ├── routes/
-│   │   ├── resume.route.js        # POST /api/resume/analyze
-│   │   └── code.route.js          # POST /api/code/review
-│   ├── services/
-│   │   ├── gemini.service.js      # callGemini() + all AI functions
-│   │   └── pdf.service.js         # PDF text extraction
+│   │   ├── resume.route.js
+│   │   ├── code.route.js
+│   │   └── hints.route.js         # POST /start, POST /next       
 │   ├── prompts/
 │   │   └── prompts.js             # All Gemini prompts, versioned in one place
 │   ├── .env                       # GEMINI_API_KEY, MONGO_URI etc.
@@ -116,3 +119,4 @@ User pastes code + selects language
 | Memory storage for PDFs | No disk I/O — faster and cleaner |
 | Light theme for Code Reviewer | Readability priority for code-heavy UI |
 | `prompts/prompts.js` separated from `gemini.service.js` | Prompts versioned and testable independent of retry/parsing logic |
+| Hints use Gemini's `startChat()` + Mongo-stored history, not one-shot JSON prompts | Multi-turn conversation needs real chat state; JSON-per-turn would break tone and lose context |

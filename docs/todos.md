@@ -4,13 +4,7 @@
 
 ## 🔴 High Priority (Next Up)
 
-- [ ] **Phase 5 — LeetCode Hint Generator**
-  - [ ] `POST /api/hints/generate` backend endpoint
-  - [ ] Gemini prompt — hints only, no full solution, ordered vague → specific
-  - [ ] `hints.controller.js` + `hints.route.js` + wire to `server.js`
-  - [ ] Frontend — problem statement input + difficulty selector
-  - [ ] Progressive reveal UI — "Show Next Hint" button, `hints.slice(0, revealed)`
-  - [ ] Add `getHints()` to `frontend/src/services/api.js`
+
 
 
 
@@ -32,6 +26,8 @@
 - [ ] Navigation bar linking all four features
 - [ ] Mobile responsive design
 - [ ] Loading skeletons
+
+- [ ] Persist sessionId in HintGenerator (localStorage or URL param) so a page refresh doesn't lose the conversation
 
 ---
 
@@ -80,3 +76,4 @@
 - [x] Architecture cleanup — split gemini.service.js + prompts.js (Day 5)
 - [x] Fixed broken frontend api.js, added real axios instance (Day 5)
 - [x] Corrected docs — removed incorrect Tailwind claim (Day 5)
+- [x] Phase 5 — LeetCode Hint Generator, multi-turn, MongoDB-backed (Day 6)

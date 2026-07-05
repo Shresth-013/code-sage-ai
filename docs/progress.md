@@ -78,6 +78,22 @@
 - Codebase is now consistent with the "service layer" and "single axios source" rules from the blueprint
 - Ready for Phase 5 — LeetCode Hint Generator, with MongoDB-backed multi-turn conversation
 
+## Day 6 — Phase 5: LeetCode Hint Generator ✅
+
+### Completed
+- `models/conversation.model.js` — sessionId, problem, difficulty, messages[] (Mongoose)
+- `config/db.js` — connectDB(), wired into server.js startup
+- `prompts.js` — HINTS_SYSTEM (socratic mentor rules) + startHintPrompt()
+- `gemini.service.js` — getHintResponse() using Gemini's startChat() with Mongo-backed history replay
+- `hints.controller.js` + `hints.route.js` — POST /api/hints/start, POST /api/hints/next
+- `HintGenerator.jsx` — progressive hint reveal, free-text follow-up questions, chat-style UI
+- Fixed Navbar in App.jsx — was using Tailwind classes that did nothing; replaced with inline styles
+
+### Notes
+- Hints are the first feature returning plain text instead of JSON — intentional, keeps mentor tone conversational
+- Conversation history stored in MongoDB, not client state — session survives a page refresh if sessionId is persisted (not done yet, see Phase 6 notes)
+- All three features (resume, code, hints) now share the same {success, data|error} response envelope and the same axios instance
+
 ## Upcoming
 
 | Phase | Feature | Status |
