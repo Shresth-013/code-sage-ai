@@ -2,11 +2,18 @@ import "dotenv/config";
 
 import express from "express";
 import cors from "cors";
+
+import { connectDB } from "./config/db.js";
 import resumeRouter from "./routes/resume.route.js";
 import codeRouter from './routes/code.route.js';
 
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+connectDB();
+
 
 // Middlewares
 app.use(cors());
