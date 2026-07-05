@@ -12,10 +12,7 @@
   - [ ] Progressive reveal UI — "Show Next Hint" button, `hints.slice(0, revealed)`
   - [ ] Add `getHints()` to `frontend/src/services/api.js`
 
-- [ ] **Phase 4.5 — Code Reviewer Polish (optional)**
-  - [ ] Empty state messages when arrays are empty
-  - [ ] Copy-fix button on each bug card
-  - [ ] Language auto-detect from pasted code
+
 
 ---
 
@@ -45,6 +42,10 @@
 - [ ] Export resume report as PDF
 - [ ] Dark/light mode toggle
 - [ ] Zod input validation on all request bodies
+- [ ] **Phase 4.5 — Code Reviewer Polish (optional)**
+  - [ ] Empty state messages when arrays are empty
+  - [ ] Copy-fix button on each bug card
+  - [ ] Language auto-detect from pasted code
 
 ---
 
@@ -76,3 +77,6 @@
 - [x] Code Reviewer — backend route + controller + prompt (Day 4)
 - [x] Code Reviewer — frontend UI + light theme (Day 4)
 - [x] End-to-end test — Code Reviewer working (Day 4)
+- [x] Architecture cleanup — split gemini.service.js + prompts.js (Day 5)
+- [x] Fixed broken frontend api.js, added real axios instance (Day 5)
+- [x] Corrected docs — removed incorrect Tailwind claim (Day 5)

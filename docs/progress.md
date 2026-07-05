@@ -63,6 +63,20 @@
 - Phase 4.5 (optional polish) identified but deprioritized
 
 ---
+## Day 5 — Phase 4.5: Architecture Cleanup ✅
+
+### Completed
+- Split `geminiServices.js` into `services/gemini.service.js` (retry + call logic) and `prompts/prompts.js` (all prompt strings)
+- Fixed broken `frontend/src/services/api.js` — was referencing an undefined `api` object, causing a runtime crash on every code review request
+- Added real axios instance with `baseURL` from `VITE_API_URL`
+- Removed hardcoded `fetch` + URL from `ResumeUpload.jsx`; now uses `analyzeResume()` from `api.js`
+- Added `frontend/.env`, ignored `.env` in `frontend/.gitignore`
+- Corrected docs — TailwindCSS was never actually installed; project uses a CSS custom-property design-token system
+
+### Notes
+- All HTTP calls (frontend) and all Gemini calls (backend) now go through exactly one shared module each
+- Codebase is now consistent with the "service layer" and "single axios source" rules from the blueprint
+- Ready for Phase 5 — LeetCode Hint Generator, with MongoDB-backed multi-turn conversation
 
 ## Upcoming
 

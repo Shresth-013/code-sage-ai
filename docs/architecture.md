@@ -8,9 +8,9 @@ Four tools: Resume Analyzer · Code Reviewer · LeetCode Hints · Roadmap Genera
 
 ### Frontend
 - React 18 + Vite
-- TailwindCSS
-- Component-based architecture
-- Axios (HTTP client with interceptors)
+- Design-token CSS system (CSS custom properties in `index.css` — no Tailwind is installed; earlier notes claiming Tailwind were incorrect)
+- Component-based architecture, inline styles per component
+- Axios (single instance in `services/api.js`, shared across all features)
 
 ### Backend
 - Node.js + Express
@@ -35,23 +35,26 @@ code-sage-ai/
 │   │   ├── resume.route.js        # POST /api/resume/analyze
 │   │   └── code.route.js          # POST /api/code/review
 │   ├── services/
-│   │   ├── geminiServices.js      # callGemini() + all AI functions
+│   │   ├── gemini.service.js      # callGemini() + all AI functions
 │   │   └── pdf.service.js         # PDF text extraction
+│   ├── prompts/
+│   │   └── prompts.js             # All Gemini prompts, versioned in one place
 │   ├── .env                       # GEMINI_API_KEY, MONGO_URI etc.
 │   └── server.js                  # Express entry point + route wiring
 ├── frontend/
+│   ├── .env                       # VITE_API_URL
 │   └── src/
-│       ├── pages/
-│       │   ├── ResumeAnalyzer.jsx
-│       │   └── CodeReviewer.jsx
+│       ├── components/
+│       │   ├── ResumeUpload.jsx
+│       │   └── CodeReview.jsx
 │       ├── services/
-│       │   └── api.js             # Axios instance + all API calls
+│       │   └── api.js             # Axios instance + all API calls — single source
 │       ├── App.jsx
 │       └── main.jsx
 └── docs/
-├── architecture.md
-├── progress.md
-└── todos.md
+    ├── architecture.md
+    ├── progress.md
+    └── todos.md
 
 ## API Endpoints
 
@@ -112,3 +115,4 @@ User pastes code + selects language
 | Prompts in one file | Easy to version, debug, and A/B test |
 | Memory storage for PDFs | No disk I/O — faster and cleaner |
 | Light theme for Code Reviewer | Readability priority for code-heavy UI |
+| `prompts/prompts.js` separated from `gemini.service.js` | Prompts versioned and testable independent of retry/parsing logic |
