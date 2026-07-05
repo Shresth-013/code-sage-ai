@@ -1,8 +1,16 @@
+// backend/services/gemini.service.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  RESUME_SYSTEM,
+  resumePrompt,
+  CODE_REVIEW_SYSTEM,
+  codeReviewPrompt,
+} from "../prompts/prompts.js";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
+// Shared retry + JSON-parse wrapper — every feature reuses this.
 const callGemini = async (prompt, maxRetries = 3) => {
   const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   let lastError;
@@ -18,7 +26,6 @@ const callGemini = async (prompt, maxRetries = 3) => {
         .trim();
 
       return JSON.parse(cleaned);
-
     } catch (error) {
       lastError = error;
       const isRetryable = error.status === 503 || error.status === 429;
@@ -43,46 +50,14 @@ const callGemini = async (prompt, maxRetries = 3) => {
 
 // ─── Resume Analyzer ───
 export const analyzeResumeWithGemini = async (resumeText) => {
-  const prompt = `
-You are an expert ATS resume analyzer and career coach.
-Return ONLY raw JSON. No explanation, no markdown, no code blocks.
-
-{
-  "score": <number 0-100>,
-  "summary": "<2-3 sentence overall assessment>",
-  "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
-  "weaknesses": ["<weakness 1>", "<weakness 2>", "<weakness 3>"],
-  "missingKeywords": ["<keyword 1>", "<keyword 2>", "<keyword 3>"],
-  "suggestions": ["<suggestion 1>", "<suggestion 2>", "<suggestion 3>"]
-}
-
-Resume:
----
-${resumeText}
----`;
-
+  const prompt = `${RESUME_SYSTEM}\n\n${resumePrompt(resumeText)}`;
   return callGemini(prompt);
 };
 
 // ─── Code Reviewer ───
 export const reviewCodeWithGemini = async (code, language) => {
-  const prompt = `
-You are a senior software engineer doing a code review.
-Return ONLY raw JSON. No explanation, no markdown, no code blocks.
-
-LANGUAGE: ${language}
-
-CODE:
-${code}
-
-{
-  "overallScore": <number 0-100>,
-  "summary": "<2-3 sentence overall assessment>",
-  "bugs": [{ "issue": "<description>", "line": "<line number or range>", "fix": "<how to fix>" }],
-  "performance": ["<suggestion>"],
-  "readability": ["<suggestion>"],
-  "bestPractices": ["<suggestion>"]
-}`;
-
+  const prompt = `${CODE_REVIEW_SYSTEM}\n\n${codeReviewPrompt(code, language)}`;
   return callGemini(prompt);
 };
+
+export { callGemini };

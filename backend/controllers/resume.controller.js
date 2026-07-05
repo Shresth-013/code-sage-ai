@@ -1,5 +1,5 @@
 import { createRequire } from "module";
-import { analyzeResumeWithGemini } from "../services/geminiServices.js";
+import { analyzeResumeWithGemini } from "../services/gemini.service.js";
 
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");

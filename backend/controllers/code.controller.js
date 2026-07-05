@@ -1,4 +1,4 @@
-import { reviewCodeWithGemini } from "../services/geminiServices.js";
+import { reviewCodeWithGemini } from "../services/gemini.service.js";
 
 export const reviewCode = async (req, res) => {
   try {
