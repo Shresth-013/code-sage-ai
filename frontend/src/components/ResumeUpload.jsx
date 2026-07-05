@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_URL = "http://localhost:5000/api/resume/analyze";
+import { analyzeResume } from "../services/api";
 
 // ── Logo ──────────────────────────────────────────────────
 function Logo() {
@@ -210,21 +210,20 @@ export default function ResumeUpload() {
   };
 
   const handleSubmit = async () => {
-    if (!file) { setError("Please select a PDF file first."); return; }
-    const formData = new FormData();
-    formData.append("resume", file);
-    setLoading(true); setError(""); setResult(null);
-    try {
-      const res  = await fetch(API_URL, { method: "POST", body: formData });
-      const json = await res.json();
-      if (!json.success) setError(json.error || "Analysis failed.");
-      else setResult(json.data);
-    } catch {
-      setError("Network error. Is the backend running on port 5000?");
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!file) { setError("Please select a PDF file first."); return; }
+  const formData = new FormData();
+  formData.append("resume", file);
+  setLoading(true); setError(""); setResult(null);
+  try {
+    const res = await analyzeResume(formData);
+    if (!res.data.success) setError(res.data.error || "Analysis failed.");
+    else setResult(res.data.data);
+  } catch (err) {
+    setError(err.response?.data?.error || "Network error. Is the backend running on port 5000?");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div style={{
