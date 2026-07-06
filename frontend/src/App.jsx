@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ResumeUpload from "./components/ResumeUpload";
 import CodeReview from "./components/CodeReview";
 import HintGenerator from "./components/HintGenerator";
+import RoadmapGenerator from "./components/RoadmapGenerator";
+
 
 function Navbar() {
   return (
@@ -17,6 +19,7 @@ function Navbar() {
         { to: "/", label: "Resume Analyzer" },
         { to: "/code", label: "Code Reviewer" },
         { to: "/hints", label: "Hint Generator" },
+        { to: "/roadmap", label: "Roadmap" },
       ].map(({ to, label }) => (
         <Link
           key={to}
@@ -42,6 +45,8 @@ function App() {
           <Route path="/" element={<ResumeUpload />} />
           <Route path="/code" element={<CodeReview />} />
           <Route path="/hints" element={<HintGenerator />} />
+          <Route path="/roadmap" element={<RoadmapGenerator />} />
+          <Route path="/roadmap/:id" element={<RoadmapGenerator />} />
         </Routes>
       </div>
     </BrowserRouter>

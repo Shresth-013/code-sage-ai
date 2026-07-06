@@ -6,17 +6,17 @@ const api = axios.create({
   timeout: 30000,
 });
 
-// ─── Resume Analyzer ───
 export const analyzeResume = (formData) =>
   api.post("/api/resume/analyze", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-// ─── Code Reviewer ───
 export const reviewCode = (data) => api.post("/api/code/review", data);
 
-// ─── LeetCode Hint Generator ───
 export const startHint = (data) => api.post("/api/hints/start", data);
 export const nextHint = (data) => api.post("/api/hints/next", data);
+
+export const generateRoadmap = (data) => api.post("/api/roadmap/generate", data);
+export const getRoadmap = (id) => api.get(`/api/roadmap/${id}`);
 
 export default api;
