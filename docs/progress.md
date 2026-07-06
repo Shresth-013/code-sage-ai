@@ -94,6 +94,21 @@
 - Conversation history stored in MongoDB, not client state — session survives a page refresh if sessionId is persisted (not done yet, see Phase 6 notes)
 - All three features (resume, code, hints) now share the same {success, data|error} response envelope and the same axios instance
 
+## Day 7 — Phase 6: Roadmap Generator ✅
+
+### Completed
+- `models/roadmap.model.js` — goal, level, weeksRequested, hoursPerWeek, weeks[] (Mongoose)
+- `prompts.js` — ROADMAP_SYSTEM + roadmapPrompt(goal, level, weeks, hoursPerWeek)
+- `gemini.service.js` — generateRoadmapWithGemini(), reuses callGemini() (one-shot JSON, not chat)
+- `roadmap.controller.js` + `roadmap.route.js` — POST /api/roadmap/generate (validates + saves), GET /api/roadmap/:id
+- `RoadmapGenerator.jsx` — form at /roadmap, shareable saved view at /roadmap/:id
+- Copy-shareable-link button; refreshing /roadmap/:id reloads from Mongo (confirmed persistence works, not just client state)
+
+### Notes
+- Server-side validation on weeks (1-52) and hoursPerWeek (1-80) — these numbers go straight into a prompt, so bad input isn't just a UX issue, it's a cost/reliability issue
+- All four features (resume, code, hints, roadmap) now share the same {success, data|error} envelope and single axios instance
+- No auth yet — roadmaps are shareable by ID only, not tied to a user account (planned for Phase 7)
+
 ## Upcoming
 
 | Phase | Feature | Status |

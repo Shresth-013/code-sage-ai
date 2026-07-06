@@ -30,16 +30,19 @@ code-sage-ai/
 ├── ├── backend/
 │   ├── config/
 │   │   └── db.js                  # MongoDB connection
-│   ├── models/
-│   │   └── conversation.model.js  # Hint session schema
+│   │   ├── models/
+│   │   ├── conversation.model.js
+│   │   └── roadmap.model.js       # Saved week-by-week roadmaps
 │   ├── controllers/
 │   │   ├── resume.controller.js
 │   │   ├── code.controller.js
-│   │   └── hints.controller.js    # Multi-turn hint sessions
+│   │   ├── hints.controller.js
+│   │   └── roadmap.controller.js
 │   ├── routes/
 │   │   ├── resume.route.js
 │   │   ├── code.route.js
-│   │   └── hints.route.js         # POST /start, POST /next       
+│   │   ├── hints.route.js
+│   │   └── roadmap.route.js       # POST /generate, GET /:id        # POST /start, POST /next       
 │   ├── prompts/
 │   │   └── prompts.js             # All Gemini prompts, versioned in one place
 │   ├── .env                       # GEMINI_API_KEY, MONGO_URI etc.

@@ -77,3 +77,4 @@
 - [x] Fixed broken frontend api.js, added real axios instance (Day 5)
 - [x] Corrected docs — removed incorrect Tailwind claim (Day 5)
 - [x] Phase 5 — LeetCode Hint Generator, multi-turn, MongoDB-backed (Day 6)
+- [x] Phase 6 — Roadmap Generator, saved + shareable via MongoDB (Day 7)
