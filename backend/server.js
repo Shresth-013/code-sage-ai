@@ -7,6 +7,8 @@ import { connectDB } from "./config/db.js";
 import resumeRouter from "./routes/resume.route.js";
 import codeRouter from './routes/code.route.js';
 import hintsRouter from "./routes/hints.route.js";
+import roadmapRouter from "./routes/roadmap.route.js";
+
 
 
 
@@ -25,6 +27,8 @@ app.use(express.json());
 app.use("/api/resume", resumeRouter);
 app.use('/api/code', codeRouter);
 app.use("/api/hints", hintsRouter);
+app.use("/api/roadmap", roadmapRouter);
+
 
 
 // Health check
