@@ -1,6 +1,7 @@
 // backend/services/gemini.service.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { HINTS_SYSTEM } from "../prompts/prompts.js";
+import { ROADMAP_SYSTEM, roadmapPrompt } from "../prompts/prompts.js";
 import {
   RESUME_SYSTEM,
   resumePrompt,
@@ -98,4 +99,9 @@ export const getHintResponse = async (history, userMessage, maxRetries = 3) => {
     }
   }
   throw lastError;
+};
+
+export const generateRoadmapWithGemini = async (goal, level, weeks, hoursPerWeek) => {
+  const prompt = `${ROADMAP_SYSTEM}\n\n${roadmapPrompt(goal, level, weeks, hoursPerWeek)}`;
+  return callGemini(prompt);
 };

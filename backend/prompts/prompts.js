@@ -58,3 +58,32 @@ Problem (${difficulty} difficulty):
 ${problem}
 
 Give me the first hint only. Don't reveal the approach fully — just help me start thinking in the right direction.`;
+
+// ─── Roadmap Generator ───
+export const ROADMAP_SYSTEM = `You are an expert technical mentor who designs personalized learning roadmaps for software engineering interview prep and skill-building.
+Return ONLY raw JSON. No explanation, no markdown, no code blocks.`;
+
+export const roadmapPrompt = (goal, level, weeks, hoursPerWeek) => `
+Student profile:
+- Goal: ${goal}
+- Current level: ${level}
+- Timeline: ${weeks} weeks
+- Availability: ${hoursPerWeek} hours/week
+
+Return EXACTLY this JSON structure:
+{
+  "title": "<short roadmap title>",
+  "summary": "<2-3 sentence overview of the plan and its philosophy>",
+  "weeks": [
+    {
+      "week": 1,
+      "focus": "<theme for this week>",
+      "topics": ["<topic 1>", "<topic 2>"],
+      "resources": ["<resource or practice type, no fake URLs>"],
+      "milestone": "<what should be true by end of week>"
+    }
+  ],
+  "finalAdvice": "<2-3 sentences of closing guidance>"
+}
+
+Generate exactly ${weeks} week entries, tailored to the level and hours available. Keep each week realistic for the stated hours/week — don't overload.`;
