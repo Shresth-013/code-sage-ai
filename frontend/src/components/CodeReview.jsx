@@ -8,11 +8,7 @@ const LANGUAGES = [
 
 function Section({ title, items, accent }) {
   return (
-    <div style={{
-      background: "#f8fafc",
-      border: "1px solid #e2e8f0",
-      borderRadius: 12, padding: "16px 20px",
-    }}>
+    <div className="card" style={{ padding: "16px 20px" }}>
       <h3 style={{
         margin: "0 0 12px", fontSize: "0.78rem", fontWeight: 600,
         letterSpacing: "0.08em", textTransform: "uppercase", color: accent,
@@ -22,7 +18,7 @@ function Section({ title, items, accent }) {
         {items.map((item, i) => (
           <li key={i} style={{
             display: "flex", gap: 8, fontSize: "0.85rem",
-            color: "#475569", lineHeight: 1.6,
+            color: "var(--text)", lineHeight: 1.6,
           }}>
             <span style={{ color: accent, marginTop: 1, flexShrink: 0 }}>›</span>
             <span>{item}</span>
@@ -36,23 +32,23 @@ function Section({ title, items, accent }) {
 function BugCard({ bug }) {
   return (
     <div style={{
-      background: "#fff5f5",
-      border: "1px solid #fecaca",
+      background: "rgba(248,113,113,0.08)",
+      border: "1px solid rgba(248,113,113,0.25)",
       borderRadius: 10, padding: "12px 16px",
       display: "flex", flexDirection: "column", gap: 6,
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: "0.82rem", color: "#dc2626", fontWeight: 600 }}>
+        <span style={{ fontSize: "0.82rem", color: "var(--danger)", fontWeight: 600 }}>
           {bug.issue}
         </span>
         <span style={{
           fontSize: "0.7rem", padding: "2px 8px", borderRadius: 100,
-          background: "#fee2e2", border: "1px solid #fecaca",
-          color: "#dc2626", whiteSpace: "nowrap", flexShrink: 0,
+          background: "rgba(248,113,113,0.15)", border: "1px solid rgba(248,113,113,0.3)",
+          color: "var(--danger)", whiteSpace: "nowrap", flexShrink: 0,
         }}>line {bug.line}</span>
       </div>
-      <p style={{ margin: 0, fontSize: "0.82rem", color: "#475569", lineHeight: 1.5 }}>
-        <span style={{ color: "#16a34a", fontWeight: 500 }}>Fix: </span>
+      <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text)", lineHeight: 1.5 }}>
+        <span style={{ color: "var(--success)", fontWeight: 500 }}>Fix: </span>
         {bug.fix}
       </p>
     </div>
@@ -61,9 +57,9 @@ function BugCard({ bug }) {
 
 function ScoreRing({ score }) {
   const color =
-    score >= 80 ? "#16a34a" :
-    score >= 60 ? "#d97706" :
-    score >= 40 ? "#ea580c" : "#dc2626";
+    score >= 80 ? "var(--success)" :
+    score >= 60 ? "var(--warn)" :
+    score >= 40 ? "#ea580c" : "var(--danger)";
 
   const label =
     score >= 80 ? "Excellent" :
@@ -77,11 +73,11 @@ function ScoreRing({ score }) {
         border: `5px solid ${color}`,
         display: "flex", alignItems: "center", justifyContent: "center",
         flexDirection: "column",
-        background: `${color}10`,
+        background: "var(--surface-2)",
       }}>
         <span style={{ fontSize: "2rem", fontWeight: 800,
           fontFamily: "'DM Sans', sans-serif", color }}>{score}</span>
-        <span style={{ fontSize: "0.58rem", color, opacity: 0.7,
+        <span style={{ fontSize: "0.58rem", color, opacity: 0.8,
           letterSpacing: "0.1em", textTransform: "uppercase" }}>score</span>
       </div>
       <span style={{ fontSize: "0.75rem", fontWeight: 600, color }}>{label}</span>
@@ -110,26 +106,25 @@ export default function CodeReview() {
   };
 
   return (
-    <div style={{
+    <div className="fade-in" style={{
       minHeight: "100svh",
       display: "flex", flexDirection: "column", alignItems: "center",
       padding: "48px 16px 64px",
-      background: "#f1f5f9",
     }}>
       <div style={{ width: "100%", maxWidth: 580 }}>
 
         {/* Header */}
         <div style={{ marginBottom: 24 }}>
           <h1 style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Syne', sans-serif",
             fontWeight: 800, fontSize: "1.7rem",
             letterSpacing: "-0.02em",
-            color: "#0f172a",
+            color: "var(--text-bright)",
             margin: "0 0 4px",
           }}>Code Reviewer</h1>
           <p style={{
             margin: 0, fontSize: "0.85rem",
-            color: "#94a3b8",
+            color: "var(--text)",
             fontFamily: "'DM Sans', sans-serif",
           }}>
             Paste your code and get AI-powered feedback instantly.
@@ -137,13 +132,7 @@ export default function CodeReview() {
         </div>
 
         {/* Input Card */}
-        <div style={{
-          background: "#ffffff",
-          border: "1px solid #e2e8f0",
-          borderRadius: 16, padding: "24px",
-          marginBottom: 12,
-          boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-        }}>
+        <div className="card" style={{ padding: "24px", marginBottom: 12 }}>
           {/* Language Selector */}
           <div style={{
             display: "flex", alignItems: "center",
@@ -151,7 +140,7 @@ export default function CodeReview() {
           }}>
             <span style={{
               fontSize: "0.78rem", fontWeight: 600,
-              color: "#94a3b8",
+              color: "var(--text)",
               fontFamily: "'DM Sans', sans-serif",
               letterSpacing: "0.08em", textTransform: "uppercase",
             }}>Language</span>
@@ -159,10 +148,10 @@ export default function CodeReview() {
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               style={{
-                background: "#f8fafc",
-                border: "1px solid #e2e8f0",
+                background: "var(--surface-2)",
+                border: "1px solid var(--border)",
                 borderRadius: 8, padding: "5px 10px",
-                color: "#0f172a",
+                color: "var(--text-bright)",
                 fontSize: "0.82rem",
                 fontFamily: "'DM Sans', sans-serif",
                 cursor: "pointer", outline: "none",
@@ -184,25 +173,22 @@ export default function CodeReview() {
               width: "100%", boxSizing: "border-box",
               fontFamily: "'Courier New', monospace",
               fontSize: "0.82rem", lineHeight: 1.6,
-              background: "#f8fafc",
-              border: "1px solid #e2e8f0",
+              background: "var(--surface-2)",
+              border: "1px solid var(--border)",
               borderRadius: 10, padding: "12px 14px",
-              color: "#1e293b",
+              color: "var(--text-bright)",
               resize: "vertical", outline: "none",
-              transition: "border 0.2s",
             }}
-            onFocus={(e) => e.target.style.borderColor = "#93c5fd"}
-            onBlur={(e) => e.target.style.borderColor = "#e2e8f0"}
           />
         </div>
 
         {/* Error */}
         {error && (
           <div style={{
-            background: "#fff5f5",
-            border: "1px solid #fecaca",
+            background: "rgba(248,113,113,0.08)",
+            border: "1px solid rgba(248,113,113,0.25)",
             borderRadius: 10, padding: "10px 14px",
-            fontSize: "0.82rem", color: "#dc2626",
+            fontSize: "0.82rem", color: "var(--danger)",
             marginBottom: 12,
           }}>
             ⚠ {error}
@@ -211,20 +197,17 @@ export default function CodeReview() {
 
         {/* Review Button */}
         <button
+          className="btn-primary"
           onClick={handleReview}
           disabled={loading || !code.trim()}
           style={{
             width: "100%", padding: "13px",
-            borderRadius: 12, border: "none",
             background: loading || !code.trim()
-              ? "#e2e8f0"
-              : "linear-gradient(100deg, #3b82f6, #6366f1)",
-            color: loading || !code.trim() ? "#94a3b8" : "#ffffff",
-            fontFamily: "'DM Sans', sans-serif",
-            fontWeight: 700, fontSize: "0.95rem",
+              ? "var(--surface-2)"
+              : "linear-gradient(100deg, var(--accent), var(--accent-2))",
+            color: loading || !code.trim() ? "var(--text)" : "#0a0a0f",
+            fontSize: "0.95rem",
             letterSpacing: "0.02em",
-            cursor: loading || !code.trim() ? "not-allowed" : "pointer",
-            transition: "all 0.2s ease",
             marginBottom: 12,
           }}
         >
@@ -235,7 +218,7 @@ export default function CodeReview() {
         {loading && (
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center",
-            gap: 8, color: "#6366f1", fontSize: "0.82rem",
+            gap: 8, color: "var(--accent-2)", fontSize: "0.82rem",
             marginBottom: 16,
           }}>
             <svg style={{ animation: "spin 1s linear infinite", width: 14, height: 14 }}
@@ -254,32 +237,25 @@ export default function CodeReview() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
 
             {/* Score Card */}
-            <div style={{
-              background: "#ffffff",
-              border: "1px solid #e2e8f0",
-              borderRadius: 16, padding: "28px 24px",
+            <div className="card" style={{
+              padding: "28px 24px",
               display: "flex", flexDirection: "column",
               alignItems: "center", gap: 14,
-              boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
             }}>
               <ScoreRing score={result.overallScore} />
               <p style={{
                 margin: 0, textAlign: "center", fontSize: "0.85rem",
-                color: "#475569", maxWidth: 400, lineHeight: 1.7,
+                color: "var(--text)", maxWidth: 400, lineHeight: 1.7,
               }}>{result.summary}</p>
             </div>
 
             {/* Bugs */}
             {result.bugs?.length > 0 && (
-              <div style={{
-                background: "#f8fafc",
-                border: "1px solid #e2e8f0",
-                borderRadius: 12, padding: "16px 20px",
-              }}>
+              <div className="card" style={{ padding: "16px 20px" }}>
                 <h3 style={{
                   margin: "0 0 12px", fontSize: "0.78rem", fontWeight: 600,
                   letterSpacing: "0.08em", textTransform: "uppercase",
-                  color: "#dc2626", fontFamily: "'DM Sans', sans-serif",
+                  color: "var(--danger)", fontFamily: "'DM Sans', sans-serif",
                 }}>🐛 Bugs</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {result.bugs.map((bug, i) => <BugCard key={i} bug={bug} />)}
@@ -287,9 +263,9 @@ export default function CodeReview() {
               </div>
             )}
 
-            <Section title="⚡ Performance"   items={result.performance}   accent="#d97706" />
-            <Section title="📖 Readability"   items={result.readability}   accent="#6366f1" />
-            <Section title="✅ Best Practices" items={result.bestPractices} accent="#16a34a" />
+            <Section title="⚡ Performance"   items={result.performance}   accent="var(--warn)" />
+            <Section title="📖 Readability"   items={result.readability}   accent="var(--accent-2)" />
+            <Section title="✅ Best Practices" items={result.bestPractices} accent="var(--success)" />
 
           </div>
         )}
