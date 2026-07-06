@@ -16,6 +16,10 @@
   --success: #4ade80;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -24,8 +28,138 @@ body {
   font-size: 15px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Ambient glow blobs — sits behind everything, gives that "AI product" depth
+   without needing any images or extra libraries */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.12;
+  z-index: 0;
+  pointer-events: none;
+}
+body::before {
+  background: var(--accent);
+  top: -120px;
+  left: -100px;
+}
+body::after {
+  background: var(--accent-2);
+  bottom: -140px;
+  right: -120px;
 }
 
 #root {
   min-height: 100svh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Custom scrollbar — default browser scrollbars look out of place on a dark UI */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-2);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+a {
+  color: var(--accent-2);
+  transition: color 0.15s ease;
+}
+a:hover {
+  color: var(--accent);
+}
+
+button {
+  font-family: 'DM Sans', sans-serif;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.15s ease;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+textarea, input {
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.15s ease;
+}
+textarea:focus, input:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+}
+
+/* Gentle entrance animation — apply className="fade-in" to a page's outer wrapper */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeInUp 0.4s ease both;
+}
+
+/* Shared component classes — use these instead of repeating inline styles
+   across ResumeUpload, CodeReview, HintGenerator, RoadmapGenerator */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+  border-color: rgba(94, 234, 212, 0.25);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #0a0a0f;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--surface-2);
+  color: var(--text-bright);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
