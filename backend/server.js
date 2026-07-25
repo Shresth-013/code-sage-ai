@@ -10,6 +10,7 @@ import codeRouter from './routes/code.route.js';
 import hintsRouter from "./routes/hints.route.js";
 import roadmapRouter from "./routes/roadmap.route.js";
 import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,6 +31,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 app.use("/api/resume", resumeRouter);
 app.use('/api/code', codeRouter);
 app.use("/api/hints", hintsRouter);
