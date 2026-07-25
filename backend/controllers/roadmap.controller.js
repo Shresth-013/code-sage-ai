@@ -6,6 +6,7 @@ const VALID_LEVELS = ["beginner", "intermediate", "advanced"];
 
 // POST /api/roadmap/generate
 // Body: { goal: string, level: "beginner"|"intermediate"|"advanced", weeks: number, hoursPerWeek: number }
+// Runs behind attachUserIfPresent — req.userId is set if logged in, undefined otherwise.
 export const generateRoadmap = async (req, res) => {
   try {
     const { goal, level, weeks, hoursPerWeek } = req.body;
@@ -36,6 +37,7 @@ export const generateRoadmap = async (req, res) => {
       summary: result.summary,
       weeks: result.weeks,
       finalAdvice: result.finalAdvice,
+      userId: req.userId,
     });
 
     res.json({ success: true, data: { id: roadmap._id, ...result } });
