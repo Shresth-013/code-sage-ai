@@ -21,6 +21,9 @@ const roadmapSchema = new mongoose.Schema({
   summary: { type: String, required: true },
   weeks: { type: [weekSchema], default: [] },
   finalAdvice: { type: String, required: true },
+  // Optional — only set when the request came from a logged-in user.
+  // Anonymous roadmaps keep working, shareable by ID only, with userId left unset.
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true },
   createdAt: { type: Date, default: Date.now },
 });
 
