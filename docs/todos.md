@@ -4,27 +4,17 @@
 
 ## 🔴 High Priority (Next Up)
 
-
-
-
+- [ ] Phase 7 — `protect` middleware + attach `userId` to Conversation/Roadmap + `GET /api/auth/me` + `GET /api/user/history`
+- [ ] Phase 7 — Frontend: Login.jsx, Signup.jsx, auth context, protected route wrapper, History.jsx
 
 ---
 
 ## 🟡 Medium Priority
 
-- [ ] **Phase 6 — Roadmap Generator**
-  - [ ] Input: career goal + current skills + time available
-  - [ ] Output: week-by-week plan with topics, resources, mini-projects
-  - [ ] Frontend: visual timeline component
-
-- [ ] **Phase 7 — Auth + History**
-  - [ ] JWT registration + login (PostgreSQL via Prisma)
-  - [ ] Save analysis results to MongoDB per user
-  - [ ] `GET /api/history` endpoint
-  - [ ] History page — table of past analyses with "View" link
-
 - [ ] Navigation bar linking all four features
+
 - [ ] Mobile responsive design
+
 - [ ] Loading skeletons
 
 - [ ] Persist sessionId in HintGenerator (localStorage or URL param) so a page refresh doesn't lose the conversation
@@ -38,6 +28,7 @@
 - [ ] Export resume report as PDF
 - [ ] Dark/light mode toggle
 - [ ] Zod input validation on all request bodies
+
 - [ ] **Phase 4.5 — Code Reviewer Polish (optional)**
   - [ ] Empty state messages when arrays are empty
   - [ ] Copy-fix button on each bug card
@@ -50,7 +41,6 @@
 - [ ] Backend → Render (free tier, always-on)
 - [ ] Frontend → Vercel (auto-deploy on push)
 - [ ] MongoDB → Atlas (free M0 cluster)
-- [ ] PostgreSQL → Supabase (free tier)
 - [ ] Environment variables configured on all platforms
 - [ ] CORS updated for production Vercel URL
 - [ ] Final Postman test on live URLs
@@ -78,3 +68,13 @@
 - [x] Corrected docs — removed incorrect Tailwind claim (Day 5)
 - [x] Phase 5 — LeetCode Hint Generator, multi-turn, MongoDB-backed (Day 6)
 - [x] Phase 6 — Roadmap Generator, saved + shareable via MongoDB (Day 7)
+
+---
+
+## 🧪 Test Authentication
+
+```bash
+curl -i -c cookies.txt -X POST http://localhost:5000/api/auth/signup \
+-H "Content-Type: application/json" \
+-d '{"email":"test@example.com","password":"password123"}'
+```
