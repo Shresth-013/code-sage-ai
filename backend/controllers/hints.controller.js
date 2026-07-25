@@ -6,6 +6,7 @@ import { startHintPrompt } from "../prompts/prompts.js";
 
 // POST /api/hints/start
 // Body: { problem: string, difficulty?: "easy"|"medium"|"hard" }
+// Runs behind attachUserIfPresent — req.userId is set if logged in, undefined otherwise.
 export const startHint = async (req, res) => {
   try {
     const { problem, difficulty = "medium" } = req.body;
@@ -27,6 +28,7 @@ export const startHint = async (req, res) => {
         { role: "user", content: firstPrompt },
         { role: "model", content: hint },
       ],
+      userId: req.userId,
     });
 
     res.json({ success: true, data: { sessionId, hint } });
