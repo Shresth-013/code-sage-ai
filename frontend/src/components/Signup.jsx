@@ -7,9 +7,9 @@ import { useAuth } from "../context/AuthContext";
 const MIN_PASSWORD_LENGTH = 8;
 
 const BENEFITS = [
-  { icon: FileClock, text: "Pick up hint sessions and analyses right where you left off" },
-  { icon: Map, text: "Save every roadmap and revisit it anytime, from any device" },
-  { icon: Sparkles, text: "Build a running history of your interview prep" },
+  { icon: FileClock, text: "Resume analyses, code reviews, and hints — exactly where you left them." },
+  { icon: Map, text: "Track every roadmap, milestone, and learning session in one place." },
+  { icon: Sparkles, text: "Monitor your preparation history and measure your progress over time." },
 ];
 
 export default function Signup() {

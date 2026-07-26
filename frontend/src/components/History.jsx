@@ -56,7 +56,7 @@ export default function History() {
     <div className="min-h-screen px-4 md:px-10 py-10 md:py-14">
       <div className="w-full max-w-3xl mx-auto">
         <PageHeader
-          eyebrow="// history"
+          eyebrow=" history"
           title="Your History"
           subtitle="Roadmaps and hint sessions saved to your account."
         />

@@ -59,7 +59,7 @@ export default function Login() {
   welcome_back
 </span>
         <h1 className="font-display font-bold text-3xl lg:text-4xl text-text-bright mb-4 relative max-w-sm">
-          Your prep, saved and ready.
+          Continue building your developer journey.
         </h1>
         <p className="text-sm text-text mb-8 relative max-w-sm leading-relaxed">
           Log in to access everything tied to your account.
