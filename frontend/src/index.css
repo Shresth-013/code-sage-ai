@@ -1,41 +1,43 @@
 @import "tailwindcss";
 
 /*
-  Color tokens — "The Sage's Study": ink-navy base with warm brass
-  lamplight, not the generic teal/violet AI gradient. Dark is the
-  default; .light on <html> (toggled by ThemeContext) overrides.
+  Color tokens — dark ink base, multi-hue accent system: indigo/blue
+  as the primary brand color, plus emerald, violet, and cyan as
+  secondary accents (each of the 4 tools gets its own hue). Replaces
+  the earlier single-amber palette. Dark is default; .light overrides.
 */
 :root {
-  --bg: #0b0e14;
-  --surface: #131725;
-  --surface-2: #1a1f30;
+  --bg: #0a0e17;
+  --surface: #121826;
+  --surface-2: #1a2236;
   --border: rgba(255, 255, 255, 0.08);
-  --text: #9aa3c0;
-  --text-bright: #f2efe9;
-  --accent: #d9a441;
-  --accent-2: #8b93b8;
-  --danger: #e0674f;
-  --warn: #e0b34f;
-  --success: #6fbf8b;
+  --text: #94a3c4;
+  --text-bright: #f1f5f9;
+  --accent: #6366f1;    /* indigo/blue — brand + Resume Analyzer */
+  --accent-2: #34d399;  /* emerald — Code Reviewer */
+  --accent-3: #a855f7;  /* violet — Hint Generator */
+  --accent-4: #22d3ee;  /* cyan — Roadmap */
+  --danger: #ef5350;
+  --warn: #f5a623;
+  --success: #34d399;
 }
 
 html.light {
-  --bg: #faf8f4;
+  --bg: #f7f8fc;
   --surface: #ffffff;
-  --surface-2: #f3efe6;
-  --border: rgba(20, 20, 25, 0.08);
-  --text: #5b6489;
-  --text-bright: #181a20;
-  --accent: #b5822a;
-  --accent-2: #5b6489;
-  --danger: #c24e38;
-  --warn: #a9791f;
-  --success: #3f8f63;
+  --surface-2: #eef1f8;
+  --border: rgba(15, 23, 42, 0.08);
+  --text: #5b6584;
+  --text-bright: #14172a;
+  --accent: #4f46e5;
+  --accent-2: #10b981;
+  --accent-3: #9333ea;
+  --accent-4: #0ea5e9;
+  --danger: #dc4c3e;
+  --warn: #c8860d;
+  --success: #10b981;
 }
 
-/* Bind the runtime tokens above into Tailwind's theme, so bg-bg,
-   text-accent, font-display, etc. all become real utility classes
-   that automatically follow the current light/dark mode. */
 @theme {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -45,6 +47,8 @@ html.light {
   --color-text-bright: var(--text-bright);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-accent-4: var(--accent-4);
   --color-danger: var(--danger);
   --color-warn: var(--warn);
   --color-success: var(--success);
@@ -71,8 +75,7 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Ambient brass lamplight glow — sits behind everything, replaces the
-   old teal/indigo blobs with the new signature warm accent. */
+/* Ambient glow — indigo + violet, replacing the old single-amber glow */
 body::before,
 body::after {
   content: "";
@@ -81,7 +84,7 @@ body::after {
   height: 520px;
   border-radius: 50%;
   filter: blur(140px);
-  opacity: 0.1;
+  opacity: 0.12;
   pointer-events: none;
   z-index: 0;
 }
@@ -93,12 +96,11 @@ body::before {
 }
 
 body::after {
-  background: var(--accent-2);
+  background: var(--accent-3);
   bottom: -120px;
   right: -120px;
 }
 
-/* Respect reduced-motion preferences across the app */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -108,8 +110,6 @@ body::after {
   }
 }
 
-/* Visible keyboard focus everywhere, styled with the accent instead of
-   the browser default blue outline */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;

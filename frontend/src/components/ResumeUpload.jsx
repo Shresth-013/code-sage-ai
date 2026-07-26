@@ -1,112 +1,25 @@
+// frontend/src/components/ResumeUpload.jsx
 import { useState } from "react";
-
+import { UploadCloud, FileCheck2, AlertTriangle, Loader2, CheckCircle2, XCircle, Lightbulb, Tag } from "lucide-react";
 import { analyzeResume } from "../services/api";
 
-// ── Logo ──────────────────────────────────────────────────
-function Logo() {
+// ── Page header — mono eyebrow + title, reused pattern across every page ──
+function PageHeader({ eyebrow, title, subtitle }) {
   return (
-    <div className="flex flex-col items-center gap-3 mb-2">
-      {/* Icon mark */}
-      <div style={{
-        width: 56, height: 56,
-        borderRadius: 16,
-        background: "linear-gradient(135deg, #5eead4 0%, #818cf8 100%)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        boxShadow: "0 0 32px rgba(94,234,212,0.25), 0 0 64px rgba(129,140,248,0.15)",
-      }}>
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path d="M7 9l-4 5 4 5M21 9l4 5-4 5M16 6l-4 16"
-            stroke="#0a0a0f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </div>
-
-      {/* Wordmark */}
-      <div style={{ textAlign: "center" }}>
-        <div style={{
-          fontFamily: "'Syne', sans-serif",
-          fontWeight: 800,
-          fontSize: "2rem",
-          letterSpacing: "-0.03em",
-          lineHeight: 1,
-          background: "linear-gradient(100deg, #5eead4 0%, #a5b4fc 50%, #f0f0ff 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-        }}>
-          CodeSage<span style={{
-            background: "linear-gradient(100deg, #818cf8, #5eead4)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}> AI</span>
-        </div>
-        <div style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 300,
-          fontSize: "0.7rem",
-          letterSpacing: "0.25em",
-          textTransform: "uppercase",
-          color: "rgba(160,160,184,0.6)",
-          marginTop: 4,
-        }}>
-          Developer Intelligence
-        </div>
-      </div>
+    <div className="mb-8 text-center">
+      <p className="font-mono text-xs text-accent mb-2">{eyebrow}</p>
+      <h1 className="font-display font-semibold text-2xl md:text-3xl text-text-bright">{title}</h1>
+      {subtitle && <p className="text-sm text-text mt-2 max-w-md mx-auto">{subtitle}</p>}
     </div>
   );
 }
 
-// ── Nav pills ─────────────────────────────────────────────
-const FEATURES = [
-  { label: "Resume Analyzer", icon: "◈", live: true },
-  { label: "Code Reviewer",   icon: "⟨/⟩", live: false },
-  { label: "LeetCode Hints",  icon: "⌬", live: false },
-  { label: "Roadmap",         icon: "⊕", live: false },
-];
-
-function FeatureNav({ active }) {
-  return (
-    <div style={{
-      display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center",
-      marginBottom: 28,
-    }}>
-      {FEATURES.map((f) => (
-        <div key={f.label} style={{
-          display: "flex", alignItems: "center", gap: 6,
-          padding: "5px 12px",
-          borderRadius: 100,
-          fontSize: "0.75rem",
-          fontFamily: "'DM Sans', sans-serif",
-          fontWeight: 500,
-          border: f.label === active
-            ? "1px solid rgba(94,234,212,0.5)"
-            : "1px solid rgba(255,255,255,0.07)",
-          background: f.label === active
-            ? "rgba(94,234,212,0.08)"
-            : "rgba(255,255,255,0.03)",
-          color: f.label === active ? "#5eead4" : "rgba(160,160,184,0.5)",
-          cursor: f.live ? "pointer" : "default",
-        }}>
-          <span>{f.icon}</span>
-          <span>{f.label}</span>
-          {!f.live && (
-            <span style={{
-              fontSize: "0.6rem", padding: "1px 6px",
-              background: "rgba(129,140,248,0.12)",
-              border: "1px solid rgba(129,140,248,0.2)",
-              borderRadius: 100, color: "#818cf8",
-            }}>soon</span>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ── Score Ring ────────────────────────────────────────────
+// ── Score Ring ──────────────────────────────────────────────
 function ScoreRing({ score }) {
   const color =
-    score >= 80 ? "#4ade80" :
-    score >= 60 ? "#fbbf24" :
-    score >= 40 ? "#fb923c" : "#f87171";
+    score >= 80 ? "var(--success)" :
+    score >= 60 ? "var(--warn)" :
+    score >= 40 ? "#e08a3f" : "var(--danger)";
 
   const label =
     score >= 80 ? "Excellent" :
@@ -114,45 +27,31 @@ function ScoreRing({ score }) {
     score >= 40 ? "Average" : "Poor";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-      <div style={{
-        width: 120, height: 120, borderRadius: "50%",
-        border: `6px solid ${color}`,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        flexDirection: "column",
-        boxShadow: `0 0 24px ${color}33`,
-        background: `${color}08`,
-      }}>
-        <span style={{ fontSize: "2.2rem", fontWeight: 800,
-          fontFamily: "'Syne', sans-serif", color }}>{score}</span>
-        <span style={{ fontSize: "0.6rem", color, opacity: 0.8,
-          letterSpacing: "0.1em", textTransform: "uppercase" }}>ATS</span>
+    <div className="flex flex-col items-center gap-2">
+      <div
+        className="w-28 h-28 rounded-full flex flex-col items-center justify-center"
+        style={{ border: `6px solid ${color}`, boxShadow: `0 0 24px ${color}33`, background: `${color}10` }}
+      >
+        <span className="font-display font-bold text-3xl" style={{ color }}>{score}</span>
+        <span className="text-[10px] uppercase tracking-wider" style={{ color, opacity: 0.85 }}>ATS</span>
       </div>
-      <span style={{ fontSize: "0.75rem", fontWeight: 600, color }}>{label}</span>
+      <span className="text-sm font-semibold" style={{ color }}>{label}</span>
     </div>
   );
 }
 
-// ── Section ───────────────────────────────────────────────
-function Section({ title, items, accent }) {
+// ── Section card ────────────────────────────────────────────
+function Section({ title, items, accentClass, Icon }) {
   return (
-    <div style={{
-      background: "var(--surface-2)",
-      border: "1px solid var(--border)",
-      borderRadius: 12, padding: "16px 20px",
-    }}>
-      <h3 style={{
-        margin: "0 0 12px", fontSize: "0.8rem", fontWeight: 600,
-        letterSpacing: "0.08em", textTransform: "uppercase", color: accent,
-        fontFamily: "'DM Sans', sans-serif",
-      }}>{title}</h3>
-      <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 8 }}>
+    <div className="bg-surface-2 border border-border rounded-xl p-5">
+      <h3 className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-3 ${accentClass}`}>
+        <Icon size={14} />
+        {title}
+      </h3>
+      <ul className="space-y-2">
         {items.map((item, i) => (
-          <li key={i} style={{
-            display: "flex", gap: 8, fontSize: "0.85rem",
-            color: "var(--text)", lineHeight: 1.5,
-          }}>
-            <span style={{ color: accent, marginTop: 1, flexShrink: 0 }}>›</span>
+          <li key={i} className="flex gap-2 text-sm text-text leading-relaxed">
+            <span className={`mt-0.5 shrink-0 ${accentClass}`}>›</span>
             <span>{item}</span>
           </li>
         ))}
@@ -161,34 +60,26 @@ function Section({ title, items, accent }) {
   );
 }
 
-// ── Keywords ──────────────────────────────────────────────
+// ── Keyword badges ──────────────────────────────────────────
 function KeywordBadges({ keywords }) {
   return (
-    <div style={{
-      background: "var(--surface-2)",
-      border: "1px solid var(--border)",
-      borderRadius: 12, padding: "16px 20px",
-    }}>
-      <h3 style={{
-        margin: "0 0 12px", fontSize: "0.8rem", fontWeight: 600,
-        letterSpacing: "0.08em", textTransform: "uppercase",
-        color: "var(--accent-2)", fontFamily: "'DM Sans', sans-serif",
-      }}>Missing Keywords</h3>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+    <div className="bg-surface-2 border border-border rounded-xl p-5">
+      <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider mb-3 text-accent-2">
+        <Tag size={14} />
+        Missing Keywords
+      </h3>
+      <div className="flex flex-wrap gap-2">
         {keywords.map((kw, i) => (
-          <span key={i} style={{
-            padding: "3px 10px", borderRadius: 100, fontSize: "0.75rem",
-            background: "rgba(129,140,248,0.1)",
-            border: "1px solid rgba(129,140,248,0.2)",
-            color: "#a5b4fc", fontWeight: 500,
-          }}>{kw}</span>
+          <span key={i} className="px-2.5 py-1 rounded-full text-xs font-medium bg-accent-2/10 border border-accent-2/20 text-accent-2">
+            {kw}
+          </span>
         ))}
       </div>
     </div>
   );
 }
 
-// ── Main Component ────────────────────────────────────────
+// ── Main Component ──────────────────────────────────────────
 export default function ResumeUpload() {
   const [file, setFile]       = useState(null);
   const [loading, setLoading] = useState(false);
@@ -210,95 +101,64 @@ export default function ResumeUpload() {
   };
 
   const handleSubmit = async () => {
-  if (!file) { setError("Please select a PDF file first."); return; }
-  const formData = new FormData();
-  formData.append("resume", file);
-  setLoading(true); setError(""); setResult(null);
-  try {
-    const res = await analyzeResume(formData);
-    if (!res.data.success) setError(res.data.error || "Analysis failed.");
-    else setResult(res.data.data);
-  } catch (err) {
-    setError(err.response?.data?.error || "Network error. Is the backend running on port 5000?");
-  } finally {
-    setLoading(false);
-  }
-};
+    if (!file) { setError("Please select a PDF file first."); return; }
+    const formData = new FormData();
+    formData.append("resume", file);
+    setLoading(true); setError(""); setResult(null);
+    try {
+      const res = await analyzeResume(formData);
+      if (!res.data.success) setError(res.data.error || "Analysis failed.");
+      else setResult(res.data.data);
+    } catch (err) {
+      setError(err.response?.data?.error || "Network error. Is the backend running on port 5000?");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div style={{
-      minHeight: "100svh",
-      display: "flex", flexDirection: "column", alignItems: "center",
-      padding: "48px 16px 64px",
-      background: "var(--bg)",
-    }}>
-      <div style={{ width: "100%", maxWidth: 580 }}>
-
-        {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <Logo />
-        </div>
-
-        {/* Feature Nav */}
-        <FeatureNav active="Resume Analyzer" />
+    <div className="min-h-screen px-4 md:px-8 py-10 md:py-14">
+      <div className="w-full max-w-xl mx-auto">
+        <PageHeader
+          eyebrow="// resume_analyzer"
+          title="Resume Analyzer"
+          subtitle="Upload your resume as a PDF and get an ATS score with specific, actionable feedback."
+        />
 
         {/* Upload Card */}
         <div
           onDrop={handleDrop}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
-          style={{
-            border: `1.5px dashed ${dragOver ? "var(--accent)" : file ? "rgba(94,234,212,0.3)" : "rgba(255,255,255,0.1)"}`,
-            borderRadius: 16,
-            background: dragOver ? "rgba(94,234,212,0.04)" : "var(--surface)",
-            padding: "36px 24px",
-            textAlign: "center",
-            transition: "all 0.2s ease",
-            marginBottom: 12,
-          }}
+          className={`rounded-2xl border-2 border-dashed p-9 text-center transition-colors mb-3 ${
+            dragOver
+              ? "border-accent bg-accent/5"
+              : file
+              ? "border-accent/40 bg-surface"
+              : "border-border bg-surface"
+          }`}
         >
-          <div style={{ fontSize: "2rem", marginBottom: 10 }}>
-            {file ? "✦" : "⊹"}
+          <div className="flex justify-center mb-3 text-accent">
+            {file ? <FileCheck2 size={30} /> : <UploadCloud size={30} />}
           </div>
-          <p style={{
-            margin: "0 0 16px",
-            fontSize: "0.9rem",
-            color: file ? "var(--accent)" : "var(--text)",
-            fontWeight: file ? 500 : 400,
-          }}>
+          <p className={`mb-4 text-sm ${file ? "text-accent font-medium" : "text-text"}`}>
             {file ? file.name : "Drop your resume here, or browse"}
           </p>
-          <input type="file" accept=".pdf" id="fileInput"
-            style={{ display: "none" }}
-            onChange={(e) => handleFile(e.target.files[0])} />
-          <label htmlFor="fileInput" style={{
-            display: "inline-block",
-            padding: "8px 20px",
-            borderRadius: 8,
-            background: "rgba(255,255,255,0.05)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "var(--text-bright)",
-            fontSize: "0.8rem", fontWeight: 500,
-            cursor: "pointer",
-            transition: "background 0.2s",
-          }}>
+          <input type="file" accept=".pdf" id="fileInput" className="hidden" onChange={(e) => handleFile(e.target.files[0])} />
+          <label
+            htmlFor="fileInput"
+            className="inline-block px-5 py-2 rounded-lg bg-surface-2 border border-border text-text-bright text-sm font-medium cursor-pointer hover:bg-border transition-colors"
+          >
             Select PDF
           </label>
-          <p style={{ margin: "12px 0 0", fontSize: "0.7rem", color: "rgba(160,160,184,0.4)" }}>
-            PDF only · Max 5MB
-          </p>
+          <p className="mt-3 text-xs text-text/50">PDF only · Max 5MB</p>
         </div>
 
         {/* Error */}
         {error && (
-          <div style={{
-            background: "rgba(248,113,113,0.08)",
-            border: "1px solid rgba(248,113,113,0.25)",
-            borderRadius: 10, padding: "10px 14px",
-            fontSize: "0.82rem", color: "var(--danger)",
-            marginBottom: 12,
-          }}>
-            ⚠ {error}
+          <div className="flex items-center gap-2 bg-danger/10 border border-danger/25 rounded-lg px-3.5 py-2.5 text-sm text-danger mb-3">
+            <AlertTriangle size={15} className="shrink-0" />
+            {error}
           </div>
         )}
 
@@ -306,64 +166,35 @@ export default function ResumeUpload() {
         <button
           onClick={handleSubmit}
           disabled={loading || !file}
-          style={{
-            width: "100%", padding: "13px",
-            borderRadius: 12, border: "none",
-            background: loading || !file
-              ? "rgba(255,255,255,0.05)"
-              : "linear-gradient(100deg, #5eead4, #818cf8)",
-            color: loading || !file ? "rgba(160,160,184,0.4)" : "#0a0a0f",
-            fontFamily: "'Syne', sans-serif",
-            fontWeight: 700, fontSize: "0.95rem",
-            letterSpacing: "0.02em",
-            cursor: loading || !file ? "not-allowed" : "pointer",
-            transition: "all 0.2s ease",
-            marginBottom: 12,
-          }}
+          className={`w-full py-3.5 rounded-xl font-display font-bold text-sm tracking-wide transition-opacity mb-3 ${
+            loading || !file
+              ? "bg-surface-2 text-text/40 cursor-not-allowed"
+              : "bg-accent text-bg hover:opacity-90 cursor-pointer"
+          }`}
         >
           {loading ? "Analyzing…" : "Analyze Resume"}
         </button>
 
         {/* Loading state */}
         {loading && (
-          <div style={{
-            display: "flex", alignItems: "center", justifyContent: "center",
-            gap: 8, color: "var(--accent)", fontSize: "0.82rem",
-            marginBottom: 16,
-          }}>
-            <svg style={{ animation: "spin 1s linear infinite", width: 14, height: 14 }}
-              fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" stroke="currentColor"
-                strokeWidth="4" strokeOpacity="0.2"/>
-              <path fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-            </svg>
+          <div className="flex items-center justify-center gap-2 text-accent text-sm mb-4">
+            <Loader2 size={14} className="animate-spin" />
             Gemini is reading your resume
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         )}
 
         {/* Results */}
         {result && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 8 }}>
-            {/* Score card */}
-            <div style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: 16, padding: "28px 24px",
-              display: "flex", flexDirection: "column",
-              alignItems: "center", gap: 14,
-            }}>
+          <div className="flex flex-col gap-3 mt-2">
+            <div className="bg-surface border border-border rounded-2xl p-7 flex flex-col items-center gap-4">
               <ScoreRing score={result.score} />
-              <p style={{
-                margin: 0, textAlign: "center", fontSize: "0.85rem",
-                color: "var(--text)", maxWidth: 400, lineHeight: 1.7,
-              }}>{result.summary}</p>
+              <p className="text-center text-sm text-text max-w-sm leading-relaxed">{result.summary}</p>
             </div>
 
-            <Section title="Strengths"   items={result.strengths}   accent="var(--success)" />
-            <Section title="Weaknesses"  items={result.weaknesses}  accent="var(--danger)" />
+            <Section title="Strengths" items={result.strengths} accentClass="text-success" Icon={CheckCircle2} />
+            <Section title="Weaknesses" items={result.weaknesses} accentClass="text-danger" Icon={XCircle} />
             <KeywordBadges keywords={result.missingKeywords} />
-            <Section title="Suggestions" items={result.suggestions} accent="var(--warn)" />
+            <Section title="Suggestions" items={result.suggestions} accentClass="text-warn" Icon={Lightbulb} />
           </div>
         )}
       </div>
