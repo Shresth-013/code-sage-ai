@@ -14,10 +14,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import Logo from "./Logo";
 
-// Each tool gets its own accent color — full literal class strings so
-// Tailwind's scanner can see every variant (dynamic template strings
-// like `bg-${color}/12` would NOT be detected).
 const COLOR_CLASSES = {
   accent:   { bg: "bg-accent/14",   text: "text-accent" },
   "accent-2": { bg: "bg-accent-2/14", text: "text-accent-2" },
@@ -43,6 +41,24 @@ function navLinkClasses({ isActive }, colorKey, { compact } = {}) {
   return `${base} ${bg} ${text}`;
 }
 
+// Brand lockup — "Code Sage" carries the weight, "AI" sits in its own
+// accent badge so it reads as a suffix, not a third word competing for
+// attention. This is the one thing in the rail that should look the
+// most considered.
+function Wordmark() {
+  return (
+    <div className="flex items-center gap-2 leading-none">
+      <span className="font-display font-bold text-text-bright text-[18px] tracking-tight">
+        Code <span className="text-accent">Sage</span>
+      </span>
+      <span className="relative inline-flex items-center gap-1 font-mono text-[10px] font-bold tracking-[0.14em] text-accent bg-gradient-to-b from-accent/20 to-accent/5 border border-accent/30 rounded-md px-1.5 py-[3px] shadow-[0_0_10px_-2px_var(--accent)]">
+        <span className="w-1 h-1 rounded-full bg-accent" />
+        AI
+      </span>
+    </div>
+  );
+}
+
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
@@ -59,20 +75,9 @@ export default function Sidebar() {
       <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-60 bg-surface border-r border-border z-20">
         <div className="px-5 py-6">
           <div className="flex items-center gap-2.5">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg"
-              style={{
-                background: "linear-gradient(135deg, var(--accent), var(--accent-3))",
-                boxShadow: "0 4px 16px -2px rgba(99,102,241,0.45)",
-              }}
-            >
-              <span className="font-display font-bold text-white text-sm">CS</span>
-            </div>
-            <span className="font-display font-semibold text-text-bright text-base">
-              Code Sage AI
-            </span>
+            <Logo size={38} />
+            <Wordmark />
           </div>
-          <p className="font-mono text-[11px] text-text/70 mt-2">// dev_intelligence</p>
         </div>
 
         <nav className="flex-1 px-3 flex flex-col gap-1">
@@ -126,8 +131,7 @@ export default function Sidebar() {
               </NavLink>
               <NavLink
                 to="/signup"
-                className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold text-white hover:opacity-90 transition-opacity mt-1"
-                style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-3))" }}
+                className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold text-white bg-accent hover:bg-accent-hover transition-colors mt-1"
               >
                 <UserPlus size={16} strokeWidth={2.5} />
                 Sign up

@@ -1,24 +1,28 @@
 // frontend/src/components/HintGenerator.jsx
 import { useState, useRef, useEffect } from "react";
+import { Send, RotateCcw, ArrowRight, AlertTriangle } from "lucide-react";
 import { startHint, nextHint } from "../services/api";
+import PageHeader from "./PageHeader";
 
 const DIFFICULTIES = ["easy", "medium", "hard"];
+
+const HOW_IT_WORKS = [
+  { step: "Paste the problem", desc: "Drop in the full statement, constraints included." },
+  { step: "Get a nudge, not the answer", desc: "Each hint moves you one step closer without spoiling it." },
+  { step: "Ask follow-ups anytime", desc: "Stuck on a specific part? Ask about just that." },
+];
 
 function ChatBubble({ role, content }) {
   const isModel = role === "model";
   return (
-    <div style={{ display: "flex", justifyContent: isModel ? "flex-start" : "flex-end" }}>
-      <div style={{
-        maxWidth: "80%",
-        background: isModel ? "var(--surface-2)" : "var(--accent-2)",
-        color: isModel ? "var(--text-bright)" : "#0a0a0f",
-        border: isModel ? "1px solid var(--border)" : "none",
-        borderRadius: 14,
-        padding: "12px 16px",
-        fontSize: "0.88rem",
-        lineHeight: 1.6,
-        whiteSpace: "pre-wrap",
-      }}>
+    <div className={`flex ${isModel ? "justify-start" : "justify-end"}`}>
+      <div
+        className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+          isModel
+            ? "bg-surface-2 border border-border text-text-bright"
+            : "bg-accent-3 text-white"
+        }`}
+      >
         {content}
       </div>
     </div>
@@ -29,7 +33,7 @@ export default function HintGenerator() {
   const [problem, setProblem]       = useState("");
   const [difficulty, setDifficulty] = useState("medium");
   const [sessionId, setSessionId]   = useState(null);
-  const [messages, setMessages]     = useState([]); // [{role, content}]
+  const [messages, setMessages]     = useState([]);
   const [followUp, setFollowUp]     = useState("");
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState("");
@@ -78,118 +82,128 @@ export default function HintGenerator() {
   };
 
   return (
-    <div style={{
-      minHeight: "100svh", display: "flex", flexDirection: "column",
-      alignItems: "center", padding: "48px 16px 64px", background: "var(--bg)",
-    }}>
-      <div style={{ width: "100%", maxWidth: 640 }}>
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.6rem", color: "var(--text-bright)", margin: 0 }}>
-            LeetCode Hint Generator
-          </h1>
-          <p style={{ color: "var(--text)", fontSize: "0.88rem", marginTop: 6 }}>
-            Progressive hints — no spoilers, just nudges in the right direction.
-          </p>
-        </div>
+    <div className="min-h-screen px-4 md:px-10 py-10 md:py-14">
+      <div className="w-full max-w-5xl mx-auto">
+        <PageHeader
+          eyebrow=" hint_generator"
+          title="LeetCode Hint Generator"
+          subtitle="Progressive hints — no spoilers, just nudges in the right direction."
+          accent="accent-3"
+        />
 
         {!sessionId ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <textarea
-              value={problem}
-              onChange={(e) => setProblem(e.target.value)}
-              placeholder="Paste the problem statement here..."
-              rows={6}
-              style={{
-                background: "var(--surface)", border: "1px solid var(--border)",
-                borderRadius: 12, padding: 14, color: "var(--text-bright)",
-                fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif", resize: "vertical",
-              }}
-            />
-            <div style={{ display: "flex", gap: 8 }}>
-              {DIFFICULTIES.map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setDifficulty(d)}
-                  style={{
-                    flex: 1, padding: "8px 0", borderRadius: 8, border: "1px solid var(--border)",
-                    background: difficulty === d ? "var(--accent)" : "var(--surface-2)",
-                    color: difficulty === d ? "#0a0a0f" : "var(--text)",
-                    fontSize: "0.8rem", fontWeight: 600, textTransform: "capitalize", cursor: "pointer",
-                  }}
-                >
-                  {d}
-                </button>
-              ))}
+          <div className="grid md:grid-cols-[1.4fr_1fr] gap-5">
+            <div className="bg-surface border border-border rounded-2xl p-5 flex flex-col gap-4">
+              <textarea
+                value={problem}
+                onChange={(e) => setProblem(e.target.value)}
+                placeholder="Paste the problem statement here..."
+                rows={10}
+                className="w-full bg-surface-2 border border-border rounded-xl p-4 text-sm text-text-bright placeholder:text-text/40 resize-vertical outline-none focus:border-accent-3 transition-colors"
+              />
+
+              <div>
+                <p className="text-xs font-medium text-text mb-2">Difficulty</p>
+                <div className="flex gap-2">
+                  {DIFFICULTIES.map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => setDifficulty(d)}
+                      className={`flex-1 py-2 rounded-lg border border-border text-sm font-semibold capitalize transition-colors ${
+                        difficulty === d ? "bg-accent-3 text-white border-accent-3" : "bg-surface-2 text-text hover:text-text-bright"
+                      }`}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {error && (
+                <div className="flex items-center gap-2 bg-danger/10 border border-danger/25 rounded-lg px-3.5 py-2.5 text-sm text-danger">
+                  <AlertTriangle size={15} className="shrink-0" />
+                  {error}
+                </div>
+              )}
+
+              <button
+                onClick={handleStart}
+                disabled={loading}
+                className={`py-3.5 rounded-xl font-display font-bold text-sm tracking-wide transition-opacity ${
+                  loading ? "bg-surface-2 text-text/40 cursor-not-allowed" : "bg-accent-3 text-white hover:opacity-90 cursor-pointer"
+                }`}
+              >
+                {loading ? "Thinking…" : "Get first hint"}
+              </button>
             </div>
-            <button
-              onClick={handleStart}
-              disabled={loading}
-              style={{
-                background: "var(--accent)", color: "#0a0a0f", border: "none",
-                borderRadius: 10, padding: "12px 0", fontWeight: 700, fontSize: "0.9rem",
-                cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1,
-              }}
-            >
-              {loading ? "Thinking..." : "Get first hint"}
-            </button>
-            {error && <p style={{ color: "var(--danger)", fontSize: "0.82rem", margin: 0 }}>{error}</p>}
+
+            <div className="bg-surface border border-border rounded-2xl p-6">
+              <h2 className="font-display font-semibold text-sm text-text-bright mb-4">How it works</h2>
+              <div className="flex flex-col gap-4">
+                {HOW_IT_WORKS.map(({ step, desc }, i) => (
+                  <div key={step} className="flex gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-accent-3/10 text-accent-3 flex items-center justify-center shrink-0 font-mono text-xs font-semibold">
+                      {i + 1}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-text-bright">{step}</p>
+                      <p className="text-xs text-text mt-0.5 leading-relaxed">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{
-              display: "flex", flexDirection: "column", gap: 10,
-              maxHeight: 420, overflowY: "auto", padding: "4px 2px",
-            }}>
+          <div className="bg-surface border border-border rounded-2xl p-5 flex flex-col gap-4 max-w-3xl">
+            <div className="flex flex-col gap-3 max-h-[480px] overflow-y-auto px-1">
               {messages.map((m, i) => <ChatBubble key={i} role={m.role} content={m.content} />)}
-              {loading && <ChatBubble role="model" content="..." />}
+              {loading && <ChatBubble role="model" content="…" />}
               <div ref={bottomRef} />
             </div>
 
-            {error && <p style={{ color: "var(--danger)", fontSize: "0.82rem", margin: 0 }}>{error}</p>}
+            {error && (
+              <div className="flex items-center gap-2 bg-danger/10 border border-danger/25 rounded-lg px-3.5 py-2.5 text-sm text-danger">
+                <AlertTriangle size={15} className="shrink-0" />
+                {error}
+              </div>
+            )}
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="flex gap-2">
               <input
                 value={followUp}
                 onChange={(e) => setFollowUp(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleAskFollowUp()}
-                placeholder="Ask a follow-up question..."
+                placeholder="Ask a follow-up question…"
                 disabled={loading}
-                style={{
-                  flex: 1, background: "var(--surface)", border: "1px solid var(--border)",
-                  borderRadius: 10, padding: "10px 14px", color: "var(--text-bright)", fontSize: "0.85rem",
-                }}
+                className="flex-1 bg-surface-2 border border-border rounded-lg px-3.5 py-2.5 text-sm text-text-bright placeholder:text-text/40 outline-none focus:border-accent-3 transition-colors"
               />
               <button
                 onClick={handleAskFollowUp}
                 disabled={loading}
-                style={{
-                  background: "var(--surface-2)", color: "var(--text-bright)", border: "1px solid var(--border)",
-                  borderRadius: 10, padding: "10px 16px", fontWeight: 600, fontSize: "0.85rem", cursor: "pointer",
-                }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-2 border border-border text-text-bright text-sm font-semibold hover:bg-border transition-colors"
               >
+                <Send size={14} />
                 Ask
               </button>
             </div>
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div className="flex gap-2">
               <button
                 onClick={handleNextHint}
                 disabled={loading}
-                style={{
-                  flex: 1, background: "var(--accent)", color: "#0a0a0f", border: "none",
-                  borderRadius: 10, padding: "10px 0", fontWeight: 700, fontSize: "0.85rem",
-                  cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1,
-                }}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg font-display font-semibold text-sm transition-opacity ${
+                  loading ? "bg-surface-2 text-text/40 cursor-not-allowed" : "bg-accent-3 text-white hover:opacity-90"
+                }`}
               >
                 Next hint
+                <ArrowRight size={14} />
               </button>
               <button
                 onClick={handleReset}
-                style={{
-                  background: "transparent", color: "var(--text)", border: "1px solid var(--border)",
-                  borderRadius: 10, padding: "10px 16px", fontSize: "0.85rem", cursor: "pointer",
-                }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border text-text text-sm font-medium hover:text-text-bright transition-colors"
               >
+                <RotateCcw size={14} />
                 New problem
               </button>
             </div>

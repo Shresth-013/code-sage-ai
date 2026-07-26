@@ -1,7 +1,14 @@
 // frontend/src/components/Login.jsx
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Mail, Lock, LogIn, AlertTriangle, FileClock, Map, Sparkles, Terminal } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+
+const BENEFITS = [
+  { icon: FileClock, text: "Pick up hint sessions and analyses right where you left off" },
+  { icon: Map, text: "Save every roadmap and revisit it anytime, from any device" },
+  { icon: Sparkles, text: "Build a running history of your interview prep" },
+];
 
 export default function Login() {
   const { login } = useAuth();
@@ -13,7 +20,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // If ProtectedRoute redirected here, send the user back where they were headed.
   const redirectTo = location.state?.from || "/";
 
   const handleSubmit = async (e) => {
@@ -33,74 +39,107 @@ export default function Login() {
     }
   };
 
-  const containerStyle = {
-    minHeight: "100svh", display: "flex", flexDirection: "column",
-    alignItems: "center", justifyContent: "center", padding: "48px 16px", background: "var(--bg)",
-  };
-
-  const inputStyle = {
-    width: "100%", background: "var(--surface)", border: "1px solid var(--border)",
-    borderRadius: 10, padding: "10px 14px", color: "var(--text-bright)",
-    fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box",
-  };
-
   return (
-    <div style={containerStyle}>
-      <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: 400 }}>
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.6rem", color: "var(--text-bright)", margin: 0 }}>
-            Welcome back
-          </h1>
-          <p style={{ color: "var(--text)", fontSize: "0.88rem", marginTop: 6 }}>
-            Log in to see your saved roadmaps and hint sessions.
-          </p>
+    <div className="min-h-screen flex">
+      {/* Left branding panel — desktop only */}
+      <div
+        className="hidden md:flex md:w-1/2 flex-col justify-center px-14 relative overflow-hidden"
+        style={{ background: "linear-gradient(160deg, var(--surface) 0%, var(--bg) 100%)" }}
+      >
+        <div
+          className="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-20 blur-3xl pointer-events-none"
+          style={{ background: "var(--accent)" }}
+        />
+        <div
+          className="absolute bottom-0 right-0 w-72 h-72 rounded-full opacity-15 blur-3xl pointer-events-none"
+          style={{ background: "var(--accent-3)" }}
+        />
+<span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider rounded-full border border-accent/20 bg-accent/10 text-accent px-2.5 py-1 mb-4 relative">
+  <Terminal size={12} strokeWidth={2.5} />
+  welcome_back
+</span>
+        <h1 className="font-display font-bold text-3xl lg:text-4xl text-text-bright mb-4 relative max-w-sm">
+          Your prep, saved and ready.
+        </h1>
+        <p className="text-sm text-text mb-8 relative max-w-sm leading-relaxed">
+          Log in to access everything tied to your account.
+        </p>
+        <div className="flex flex-col gap-4 relative">
+          {BENEFITS.map(({ icon: Icon, text }) => (
+            <div key={text} className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-accent/10 text-accent flex items-center justify-center shrink-0">
+                <Icon size={15} />
+              </div>
+              <p className="text-sm text-text leading-relaxed pt-1">{text}</p>
+            </div>
+          ))}
         </div>
+      </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <div>
-            <label style={{ fontSize: "0.8rem", color: "var(--text)", display: "block", marginBottom: 6 }}>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-              style={inputStyle}
-            />
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center px-4 py-12">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm">
+          <div className="mb-8">
+            <h2 className="font-display font-semibold text-2xl text-text-bright">Log in</h2>
+            <p className="text-sm text-text mt-1.5">Welcome back to Code Sage AI.</p>
           </div>
 
-          <div>
-            <label style={{ fontSize: "0.8rem", color: "var(--text)", display: "block", marginBottom: 6 }}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              autoComplete="current-password"
-              style={inputStyle}
-            />
+          <div className="flex flex-col gap-4">
+            <div>
+              <label className="text-xs font-medium text-text block mb-1.5">Email</label>
+              <div className="relative">
+                <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text/50" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className="w-full bg-surface border border-border rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-text-bright placeholder:text-text/40 focus:outline-none focus:border-accent transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-text block mb-1.5">Password</label>
+              <div className="relative">
+                <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text/50" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className="w-full bg-surface border border-border rounded-lg pl-10 pr-3.5 py-2.5 text-sm text-text-bright placeholder:text-text/40 focus:outline-none focus:border-accent transition-colors"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`flex items-center justify-center gap-2 py-3 rounded-lg font-display font-bold text-sm transition-opacity ${
+                loading ? "bg-surface-2 text-text/40 cursor-not-allowed" : "bg-accent text-white hover:opacity-90"
+              }`}
+            >
+              <LogIn size={16} />
+              {loading ? "Logging in..." : "Log in"}
+            </button>
+
+            {error && (
+              <div className="flex items-center gap-2 bg-danger/10 border border-danger/25 rounded-lg px-3.5 py-2.5 text-sm text-danger">
+                <AlertTriangle size={15} className="shrink-0" />
+                {error}
+              </div>
+            )}
+
+            <p className="text-sm text-text text-center mt-2">
+              Don't have an account?{" "}
+              <Link to="/signup" className="text-accent font-semibold hover:underline">Sign up</Link>
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              background: "var(--accent)", color: "#0a0a0f", border: "none",
-              borderRadius: 10, padding: "12px 0", fontWeight: 700, fontSize: "0.9rem",
-              cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.6 : 1,
-            }}
-          >
-            {loading ? "Logging in..." : "Log in"}
-          </button>
-
-          {error && <p style={{ color: "var(--danger)", fontSize: "0.82rem", margin: 0 }}>{error}</p>}
-
-          <p style={{ color: "var(--text)", fontSize: "0.85rem", textAlign: "center", marginTop: 8 }}>
-            Don't have an account?{" "}
-            <Link to="/signup" style={{ color: "var(--accent-2)", fontWeight: 600 }}>Sign up</Link>
-          </p>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

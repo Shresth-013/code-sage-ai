@@ -1,41 +1,33 @@
 // frontend/src/components/History.jsx
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Map, Lightbulb, Loader2, AlertTriangle, Inbox } from "lucide-react";
 import { getHistory } from "../services/api";
+import PageHeader from "./PageHeader";
 
 function HistoryCard({ item }) {
   const isRoadmap = item.type === "roadmap";
+  const Icon = isRoadmap ? Map : Lightbulb;
+  const accentClass = isRoadmap ? "text-accent-4" : "text-accent-3";
+  const badgeClass = isRoadmap ? "bg-accent-4/10 border-accent-4/25 text-accent-4" : "bg-accent-3/10 border-accent-3/25 text-accent-3";
 
-  const cardStyle = {
-    background: "var(--surface)", border: "1px solid var(--border)",
-    borderRadius: 12, padding: 16, display: "flex", flexDirection: "column", gap: 6,
-  };
-
-  const badgeStyle = {
-    alignSelf: "flex-start", fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase",
-    letterSpacing: "0.04em", padding: "3px 8px", borderRadius: 6,
-    background: isRoadmap ? "rgba(94,234,212,0.12)" : "rgba(129,140,248,0.12)",
-    color: isRoadmap ? "var(--accent)" : "var(--accent-2)",
-  };
-
-  const content = (
-    <div style={cardStyle}>
-      <span style={badgeStyle}>{isRoadmap ? "Roadmap" : "Hint Session"}</span>
-      <span style={{ color: "var(--text-bright)", fontWeight: 600, fontSize: "0.92rem" }}>
-        {isRoadmap ? item.title : item.problem}
-      </span>
-      {isRoadmap ? (
-        <span style={{ color: "var(--text)", fontSize: "0.8rem", textTransform: "capitalize" }}>
-          Goal: {item.goal} · {item.level}
+  const inner = (
+    <div className="bg-surface border border-border rounded-xl p-4 flex gap-3 hover:border-text/20 transition-colors">
+      <div className={`w-9 h-9 rounded-lg bg-surface-2 flex items-center justify-center shrink-0 ${accentClass}`}>
+        <Icon size={16} />
+      </div>
+      <div className="flex flex-col gap-1 min-w-0">
+        <span className={`self-start text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${badgeClass}`}>
+          {isRoadmap ? "Roadmap" : "Hint Session"}
         </span>
-      ) : (
-        <span style={{ color: "var(--text)", fontSize: "0.8rem", textTransform: "capitalize" }}>
-          Difficulty: {item.difficulty}
+        <span className="text-text-bright font-semibold text-sm truncate">
+          {isRoadmap ? item.title : item.problem}
         </span>
-      )}
-      <span style={{ color: "var(--text)", fontSize: "0.75rem", opacity: 0.7 }}>
-        {new Date(item.createdAt).toLocaleString()}
-      </span>
+        <span className="text-text text-xs capitalize">
+          {isRoadmap ? `Goal: ${item.goal} · ${item.level}` : `Difficulty: ${item.difficulty}`}
+        </span>
+        <span className="text-text/60 text-xs">{new Date(item.createdAt).toLocaleString()}</span>
+      </div>
     </div>
   );
 
@@ -43,13 +35,9 @@ function HistoryCard({ item }) {
   // wire this up to `/hints/${item.sessionId}` once HintGenerator supports
   // resuming a session from a URL param (see docs/todos.md).
   if (isRoadmap) {
-    return (
-      <Link to={`/roadmap/${item.id}`} style={{ textDecoration: "none" }}>
-        {content}
-      </Link>
-    );
+    return <Link to={`/roadmap/${item.id}`} className="no-underline">{inner}</Link>;
   }
-  return content;
+  return inner;
 }
 
 export default function History() {
@@ -64,32 +52,41 @@ export default function History() {
       .finally(() => setLoading(false));
   }, []);
 
-  const containerStyle = {
-    minHeight: "100svh", display: "flex", flexDirection: "column",
-    alignItems: "center", padding: "48px 16px 64px", background: "var(--bg)",
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={{ width: "100%", maxWidth: 680 }}>
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <h1 style={{ fontFamily: "'Syne', sans-serif", fontSize: "1.6rem", color: "var(--text-bright)", margin: 0 }}>
-            Your History
-          </h1>
-          <p style={{ color: "var(--text)", fontSize: "0.88rem", marginTop: 6 }}>
-            Roadmaps and hint sessions saved to your account.
-          </p>
-        </div>
+    <div className="min-h-screen px-4 md:px-10 py-10 md:py-14">
+      <div className="w-full max-w-3xl mx-auto">
+        <PageHeader
+          eyebrow="// history"
+          title="Your History"
+          subtitle="Roadmaps and hint sessions saved to your account."
+        />
 
-        {loading && <p style={{ color: "var(--text)", textAlign: "center" }}>Loading...</p>}
-        {error && <p style={{ color: "var(--danger)", textAlign: "center" }}>{error}</p>}
-        {!loading && !error && history.length === 0 && (
-          <p style={{ color: "var(--text)", textAlign: "center" }}>
-            Nothing saved yet — generate a roadmap or start a hint session to see it here.
-          </p>
+        {loading && (
+          <div className="flex items-center gap-2 text-text text-sm">
+            <Loader2 size={15} className="animate-spin" />
+            Loading…
+          </div>
         )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {error && (
+          <div className="flex items-center gap-2 bg-danger/10 border border-danger/25 rounded-lg px-3.5 py-2.5 text-sm text-danger">
+            <AlertTriangle size={15} className="shrink-0" />
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && history.length === 0 && (
+          <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <div className="w-12 h-12 rounded-xl bg-surface-2 flex items-center justify-center text-text/50">
+              <Inbox size={22} />
+            </div>
+            <p className="text-text text-sm max-w-xs">
+              Nothing saved yet — generate a roadmap or start a hint session to see it here.
+            </p>
+          </div>
+        )}
+
+        <div className="grid md:grid-cols-2 gap-3">
           {history.map((item) => (
             <HistoryCard key={`${item.type}-${item.id}`} item={item} />
           ))}

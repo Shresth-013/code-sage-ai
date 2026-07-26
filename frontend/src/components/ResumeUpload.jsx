@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   UploadCloud, FileCheck2, AlertTriangle, Loader2,
   CheckCircle2, XCircle, Lightbulb, Tag,
-  ScanSearch, KeySquare, Sparkles, Ruler,
+  ScanSearch, KeySquare, Sparkles, Ruler, Terminal,
 } from "lucide-react";
 import { analyzeResume } from "../services/api";
 
@@ -12,7 +12,10 @@ const TOOL_COLOR = "accent"; // this page's signature color — blue
 function PageHeader({ eyebrow, title, subtitle }) {
   return (
     <div className="mb-8">
-      <p className="font-mono text-xs text-accent mb-2">{eyebrow}</p>
+      <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider rounded-full border border-accent/20 bg-accent/10 text-accent px-2.5 py-1 mb-3">
+        <Terminal size={12} strokeWidth={2.5} />
+        {eyebrow}
+      </span>
       <h1 className="font-display font-semibold text-2xl md:text-3xl text-text-bright">{title}</h1>
       {subtitle && <p className="text-sm text-text mt-2 max-w-lg">{subtitle}</p>}
     </div>
@@ -151,7 +154,7 @@ export default function ResumeUpload() {
     <div className="min-h-screen px-4 md:px-10 py-10 md:py-14">
       <div className="w-full max-w-5xl mx-auto">
         <PageHeader
-          eyebrow="// resume_analyzer"
+          eyebrow="resume_analyzer"
           title="Resume Analyzer"
           subtitle="Upload your resume as a PDF and get an ATS score with specific, actionable feedback."
         />
