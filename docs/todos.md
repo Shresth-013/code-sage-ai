@@ -4,8 +4,7 @@
 
 ## 🔴 High Priority (Next Up)
 
-- [ ] Phase 7 — `protect` middleware + attach `userId` to Conversation/Roadmap + `GET /api/auth/me` + `GET /api/user/history`
-- [ ] Phase 7 — Frontend: Login.jsx, Signup.jsx, auth context, protected route wrapper, History.jsx
+- [ ] Phase 8 — RAG Feature: Resume ↔ Job Description Match Analyzer (MongoDB Atlas Vector Search)
 
 ---
 
@@ -17,7 +16,7 @@
 
 - [ ] Loading skeletons
 
-- [ ] Persist sessionId in HintGenerator (localStorage or URL param) so a page refresh doesn't lose the conversation
+- [ ] Persist sessionId in HintGenerator (localStorage or URL param) so a page refresh doesn't lose the conversation — also blocks making hint sessions clickable/resumable from the History page
 
 ---
 
@@ -68,6 +67,9 @@
 - [x] Corrected docs — removed incorrect Tailwind claim (Day 5)
 - [x] Phase 5 — LeetCode Hint Generator, multi-turn, MongoDB-backed (Day 6)
 - [x] Phase 6 — Roadmap Generator, saved + shareable via MongoDB (Day 7)
+- [x] Phase 7 — User model, signup/login/logout, httpOnly JWT cookie auth (Day 8)
+- [x] Phase 7 — `protect` + `attachUserIfPresent` middleware; `userId` attached to Conversation/Roadmap; `GET /api/auth/me`; `GET /api/user/history` (Day 9)
+- [x] Phase 7 — Frontend: AuthContext, ProtectedRoute, Login.jsx, Signup.jsx, History.jsx, auth-aware Navbar (Day 9)
 
 ---
 
