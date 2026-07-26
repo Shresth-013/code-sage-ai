@@ -4,13 +4,25 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CodeSage AI — Developer Intelligence</title>
+    <title>Code Sage AI — Developer Intelligence</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <!--
+      Set the theme class before React mounts, so there's no flash of the
+      wrong theme on load. Reads the user's saved choice, falling back to
+      their OS preference, falling back to dark (this product's default).
+    -->
+    <script>
+      (function () {
+        var stored = localStorage.getItem("csai-theme");
+        var theme = stored || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+        document.documentElement.classList.toggle("light", theme === "light");
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
