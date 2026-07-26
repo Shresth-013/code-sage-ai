@@ -9,7 +9,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Stack](https://img.shields.io/badge/stack-MERN%20%2B%20GenAI-orange)
 
-[Live Demo](#) · [Report Bug](https://github.com/Shresth-013/code-sage-ai/issues) · [Request Feature](https://github.com/Shresth-013/code-sage-ai/issues)
+[Live Demo(soon!)](#) · [Report Bug](https://github.com/Shresth-013/code-sage-ai/issues) · [Request Feature](https://github.com/Shresth-013/code-sage-ai/issues)
 
 </div>
 
